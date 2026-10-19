@@ -51,7 +51,7 @@ button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!impo
 <div class="logo">FiberPilot</div><div class="muted">Fiber Network Management</div>
 <div class="field"><label>Email</label><input id="email" type="email" placeholder="admin@example.com"></div>
 <div class="field"><label>Password</label><input id="password" type="password" placeholder="Password"></div>
-<button class="primary" onclick="login()">Login</button><div id="loginError" class="error hidden"></div>
+<button id="loginButton" type="button" class="primary">Login</button><div id="loginError" class="error hidden"></div>
 </div></div>
 
 <div id="app" class="app hidden">
@@ -192,16 +192,42 @@ const SUPABASE_KEY="sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT";
 const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,currentProfile=null,currentCompany=null,pointsCache=[],linesCache=[];
 
-document.addEventListener("DOMContentLoaded",async()=>{const {data:{session},error}=await client.auth.getSession();if(error||!session?.user){showLogin();return}await loadUser(session.user)});
+document.addEventListener("DOMContentLoaded",async()=>{
+  const btn=document.getElementById("loginButton");
+  if(btn) btn.addEventListener("click",login);
+  try{
+    if(!window.supabase){throw new Error("Supabase library did not load. Please refresh the page or check your internet connection.");}
+    const {data:{session},error}=await client.auth.getSession();
+    if(error){console.error(error);showLogin();return}
+    if(!session?.user){showLogin();return}
+    await loadUser(session.user);
+  }catch(e){console.error(e);showLogin();showLoginError(e);}
+});
 client.auth.onAuthStateChange((event)=>{if(event==="SIGNED_OUT")showLogin()});
 
 async function login(){
- const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value,errorBox=document.getElementById("loginError");
+ const btn=document.getElementById("loginButton"),email=document.getElementById("email").value.trim(),password=document.getElementById("password").value,errorBox=document.getElementById("loginError");
  errorBox.classList.add("hidden");errorBox.textContent="";
- if(!email||!password){errorBox.textContent="Email and password are required.";errorBox.classList.remove("hidden");return}
- const {data,error}=await client.auth.signInWithPassword({email,password});
- if(error){errorBox.textContent=error.message;errorBox.classList.remove("hidden");return}
- await loadUser(data.user);
+ if(!email||!password){showLoginError(new Error("Email and password are required."));return}
+ if(!window.supabase){showLoginError(new Error("Supabase library did not load. Refresh the page and try again."));return}
+ if(btn){btn.disabled=true;btn.textContent="Logging in...";}
+ try{
+   const {data,error}=await client.auth.signInWithPassword({email,password});
+   if(error) throw error;
+   if(!data?.user) throw new Error("Login succeeded but no user session was returned.");
+   await loadUser(data.user);
+ }catch(e){
+   console.error("LOGIN ERROR",e);
+   showLoginError(e);
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent="Login";}
+ }
+}
+function showLoginError(e){
+ const box=document.getElementById("loginError");
+ if(!box)return;
+ box.textContent=e?.message||String(e)||"Login failed. Please try again.";
+ box.classList.remove("hidden");
 }
 async function loadUser(user){
  currentUser=user;
