@@ -2,1597 +2,208 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>FiberPilot</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f7fb;
-  color:#172033;
-}
-
-button,input,select{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-
-.login-page{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:#eef3f9;
-}
-
-.login-card{
-  width:100%;
-  max-width:420px;
-  background:white;
-  padding:32px;
-  border-radius:18px;
-  box-shadow:0 10px 35px rgba(0,0,0,.08);
-}
-
-.logo{
-  font-size:30px;
-  font-weight:800;
-  margin-bottom:8px;
-}
-
-.muted{color:#667085}
-
-.field{margin-top:16px}
-
-.field label{
-  display:block;
-  font-weight:600;
-  margin-bottom:7px;
-}
-
-.field input,
-.field select{
-  width:100%;
-  padding:12px;
-  border:1px solid #d7dce5;
-  border-radius:9px;
-  outline:none;
-}
-
-.field input:focus,
-.field select:focus{
-  border-color:#2563eb;
-}
-
-.primary{
-  width:100%;
-  margin-top:20px;
-  padding:13px;
-  border:0;
-  border-radius:9px;
-  background:#2563eb;
-  color:white;
-  font-weight:700;
-}
-
-.primary:hover{opacity:.92}
-
-.error{
-  margin-top:14px;
-  color:#b42318;
-  background:#fef3f2;
-  padding:10px;
-  border-radius:8px;
-}
-
-.app{
-  min-height:100vh;
-}
-
-.topbar{
-  height:64px;
-  background:#111827;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-}
-
-.brand{
-  font-size:22px;
-  font-weight:800;
-}
-
-.user-area{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.logout{
-  border:1px solid #475467;
-  background:transparent;
-  color:white;
-  padding:8px 13px;
-  border-radius:8px;
-}
-
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:24px;
-}
-
-.company{
-  margin-bottom:22px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
-}
-
-.card{
-  background:white;
-  border-radius:14px;
-  padding:20px;
-  box-shadow:0 3px 15px rgba(0,0,0,.05);
-}
-
-.card-title{
-  color:#667085;
-  font-size:14px;
-}
-
-.number{
-  margin-top:8px;
-  font-size:30px;
-  font-weight:800;
-}
-
-.section{
-  margin-top:24px;
-}
-
-.section-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
-}
-
-.add-btn{
-  border:0;
-  background:#2563eb;
-  color:white;
-  padding:10px 15px;
-  border-radius:8px;
-  font-weight:700;
-}
-
-.table-wrap{
-  overflow:auto;
-  background:white;
-  border-radius:14px;
-  box-shadow:0 3px 15px rgba(0,0,0,.05);
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:700px;
-}
-
-th,td{
-  padding:13px 15px;
-  text-align:left;
-  border-bottom:1px solid #eaecf0;
-}
-
-th{
-  font-size:13px;
-  color:#667085;
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.modal-card{
-  width:100%;
-  max-width:500px;
-  background:white;
-  padding:25px;
-  border-radius:15px;
-}
-
-.modal-actions{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.cancel{
-  flex:1;
-  border:1px solid #d0d5dd;
-  background:white;
-  padding:11px;
-  border-radius:8px;
-}
-
-.save{
-  flex:1;
-  border:0;
-  background:#2563eb;
-  color:white;
-  padding:11px;
-  border-radius:8px;
-}
-
-.badge{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  background:#ecfdf3;
-  color:#027a48;
-  font-size:12px;
-  font-weight:700;
-}
-
-@media(max-width:800px){
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media(max-width:500px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .container{
-    padding:15px;
-  }
-
-  .topbar{
-    padding:0 14px;
-  }
-}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#eef3f9}
+.login-card{width:100%;max-width:420px;background:#fff;padding:32px;border-radius:18px;box-shadow:0 10px 35px rgba(0,0,0,.08)}
+.logo{font-size:30px;font-weight:800;margin-bottom:8px}.muted{color:#667085}.field{margin-top:16px}.field label{display:block;font-weight:600;margin-bottom:7px}
+.field input,.field select{width:100%;padding:12px;border:1px solid #d7dce5;border-radius:9px;outline:none}.field input:focus,.field select:focus{border-color:#2563eb}
+.primary,.add-btn{border:0;background:#2563eb;color:#fff;font-weight:700}.primary{width:100%;margin-top:20px;padding:13px;border-radius:9px}.error{margin-top:14px;color:#b42318;background:#fef3f2;padding:10px;border-radius:8px}
+.app{min-height:100vh}.topbar{height:64px;background:#111827;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:20}
+.brand{font-size:22px;font-weight:800;display:flex;gap:10px;align-items:center}.menu-btn{border:0;background:#1f2937;color:#fff;border-radius:8px;padding:8px 11px;font-size:20px}
+.user-area{display:flex;align-items:center;gap:12px}.logout{border:1px solid #475467;background:transparent;color:#fff;padding:8px 13px;border-radius:8px}
+.layout{display:flex;min-height:calc(100vh - 64px)}.sidebar{width:255px;background:#fff;border-right:1px solid #e5e7eb;padding:16px 12px;flex-shrink:0}
+.menu-title{font-size:12px;color:#98a2b3;font-weight:700;padding:8px 12px;text-transform:uppercase}.menu-item{width:100%;display:flex;align-items:center;gap:11px;border:0;background:transparent;padding:12px;border-radius:9px;text-align:left;color:#344054;font-weight:600;margin:2px 0}
+.menu-item:hover,.menu-item.active{background:#eff6ff;color:#1d4ed8}.menu-spacer{height:12px}.danger{color:#b42318!important}.main{flex:1;min-width:0}.container{max-width:1200px;margin:auto;padding:24px}
+.company{margin-bottom:22px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 15px rgba(0,0,0,.05)}.card-title{color:#667085;font-size:14px}.number{margin-top:8px;font-size:30px;font-weight:800}
+.section{margin-top:24px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.add-btn{padding:10px 15px;border-radius:8px}
+.table-wrap{overflow:auto;background:#fff;border-radius:14px;box-shadow:0 3px 15px rgba(0,0,0,.05)}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:13px 15px;text-align:left;border-bottom:1px solid #eaecf0}th{font-size:13px;color:#667085}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}.modal-card{width:100%;max-width:500px;background:#fff;padding:25px;border-radius:15px;max-height:90vh;overflow:auto}
+.modal-actions{display:flex;gap:10px;margin-top:20px}.cancel,.save{flex:1;padding:11px;border-radius:8px}.cancel{border:1px solid #d0d5dd;background:#fff}.save{border:0;background:#2563eb;color:#fff}
+.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#ecfdf3;color:#027a48;font-size:12px;font-weight:700}
+.panel{background:#fff;border-radius:14px;padding:22px;box-shadow:0 3px 15px rgba(0,0,0,.05);margin-top:20px}.panel h2{margin-top:0}.info-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eaecf0}
+.toast{position:fixed;right:18px;bottom:18px;background:#111827;color:#fff;padding:12px 16px;border-radius:10px;z-index:100;box-shadow:0 5px 20px rgba(0,0,0,.2)}
+.overlay{display:none}.overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:25}
+@media(max-width:800px){.sidebar{position:fixed;top:64px;bottom:0;left:0;z-index:30;transform:translateX(-105%);transition:.2s;box-shadow:5px 0 20px rgba(0,0,0,.12)}.sidebar.open{transform:translateX(0)}.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.grid{grid-template-columns:1fr}.container{padding:15px}.topbar{padding:0 10px}.user-area #userName{display:none}.logout{padding:7px 9px}}
 </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
 <div id="loginPage" class="login-page">
+<div class="login-card">
+<div class="logo">FiberPilot</div><div class="muted">Fiber Network Management</div>
+<div class="field"><label>Email</label><input id="email" type="email" placeholder="admin@example.com"></div>
+<div class="field"><label>Password</label><input id="password" type="password" placeholder="Password"></div>
+<button class="primary" onclick="login()">Login</button><div id="loginError" class="error hidden"></div>
+</div></div>
 
-  <div class="login-card">
-
-    <div class="logo">FiberPilot</div>
-
-    <div class="muted">
-      Fiber Network Management
-    </div>
-
-    <div class="field">
-      <label>Email</label>
-      <input
-        id="email"
-        type="email"
-        placeholder="admin@example.com"
-      >
-    </div>
-
-    <div class="field">
-      <label>Password</label>
-      <input
-        id="password"
-        type="password"
-        placeholder="Password"
-      >
-    </div>
-
-    <button class="primary" onclick="login()">
-      Login
-    </button>
-
-    <div id="loginError" class="error hidden"></div>
-
-  </div>
-
-</div>
-
-
-<!-- APP -->
 <div id="app" class="app hidden">
+<div class="topbar">
+<div class="brand"><button class="menu-btn" onclick="toggleMenu()">☰</button><span>FiberPilot</span></div>
+<div class="user-area"><span id="userName"></span><button class="logout" onclick="logout()">Logout</button></div>
+</div>
+<div id="overlay" class="overlay" onclick="closeMenu()"></div>
+<div class="layout">
+<aside id="sidebar" class="sidebar">
+<div class="menu-title">Menu</div>
+<button class="menu-item active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
+<button class="menu-item" onclick="openPointModal();closeMenu()">📍 Add Point</button>
+<button class="menu-item" onclick="openLineModal();closeMenu()">〰 Draw Fiber Line</button>
+<button class="menu-item" onclick="myLocation()">📌 My Location</button>
+<button class="menu-item" onclick="refreshData()">↻ Refresh</button>
+<button class="menu-item" onclick="showPage('points',this)">📋 Point List</button>
+<button class="menu-item" onclick="showPage('lines',this)">〰 Fiber Line List</button>
+<button class="menu-item" onclick="showPage('settings',this)">⚙️ Settings</button>
+<div class="menu-spacer"></div>
+<div class="menu-title">Management</div>
+<button id="staffMenu" class="menu-item" onclick="showPage('staff',this)">👷 Staff Panel</button>
+<button id="adminMenu" class="menu-item" onclick="showPage('admin',this)">👑 Admin Panel</button>
+<div class="menu-spacer"></div>
+<button class="menu-item danger" onclick="logout()">🚪 Logout</button>
+</aside>
 
-  <div class="topbar">
-
-    <div class="brand">
-      FiberPilot
-    </div>
-
-    <div class="user-area">
-
-      <span id="userName"></span>
-
-      <button class="logout" onclick="logout()">
-        Logout
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <div class="container">
-
-    <div class="company">
-
-      <h1 id="companyName">
-        Dashboard
-      </h1>
-
-      <div class="muted">
-        Logged in as
-        <strong id="roleName"></strong>
-      </div>
-
-    </div>
-
-
-    <!-- STATS -->
-    <div class="grid">
-
-      <div class="card">
-        <div class="card-title">
-          Fiber Points
-        </div>
-
-        <div id="pointCount" class="number">
-          0
-        </div>
-      </div>
-
-
-      <div class="card">
-        <div class="card-title">
-          Fiber Boxes
-        </div>
-
-        <div id="boxCount" class="number">
-          0
-        </div>
-      </div>
-
-
-      <div class="card">
-        <div class="card-title">
-          Fiber Lines
-        </div>
-
-        <div id="lineCount" class="number">
-          0
-        </div>
-      </div>
-
-
-      <div class="card">
-        <div class="card-title">
-          Role
-        </div>
-
-        <div
-          id="dashboardRole"
-          class="number"
-          style="font-size:22px"
-        >
-          -
-        </div>
-      </div>
-
-    </div>
-
-
-    <!-- FIBER POINTS -->
-    <div class="section">
-
-      <div class="section-head">
-
-        <h2>Fiber Points</h2>
-
-        <button
-          class="add-btn"
-          onclick="openPointModal()"
-        >
-          + Add Point
-        </button>
-
-      </div>
-
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Fiber Code</th>
-              <th>Cores</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-
-          <tbody id="pointsTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-
-    <!-- FIBER LINES -->
-    <div class="section">
-
-      <div class="section-head">
-
-        <h2>Fiber Lines</h2>
-
-        <button
-          class="add-btn"
-          onclick="openLineModal()"
-        >
-          + Add Line
-        </button>
-
-      </div>
-
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Fiber Code</th>
-              <th>Cores</th>
-              <th>Length</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-
-          <tbody id="linesTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </div>
-
+<main class="main"><div class="container">
+<div id="dashboardPage">
+<div class="company"><h1 id="companyName">Dashboard</h1><div class="muted">Logged in as <strong id="roleName"></strong></div></div>
+<div class="grid">
+<div class="card"><div class="card-title">Fiber Points</div><div id="pointCount" class="number">0</div></div>
+<div class="card"><div class="card-title">Fiber Boxes</div><div id="boxCount" class="number">0</div></div>
+<div class="card"><div class="card-title">Fiber Lines</div><div id="lineCount" class="number">0</div></div>
+<div class="card"><div class="card-title">Role</div><div id="dashboardRole" class="number" style="font-size:22px">-</div></div>
+</div>
 </div>
 
+<div id="pointsPage" class="hidden"><div class="section-head"><h2>Point List</h2><button class="add-btn" onclick="openPointModal()">+ Add Point</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Fiber Code</th><th>Cores</th><th>Status</th></tr></thead><tbody id="pointsTable"></tbody></table></div></div>
 
-<!-- POINT MODAL -->
-<div id="pointModal" class="modal hidden">
+<div id="linesPage" class="hidden"><div class="section-head"><h2>Fiber Line List</h2><button class="add-btn" onclick="openLineModal()">+ Draw Fiber Line</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Fiber Code</th><th>Cores</th><th>Length</th><th>Status</th></tr></thead><tbody id="linesTable"></tbody></table></div></div>
 
-  <div class="modal-card">
+<div id="settingsPage" class="hidden"><div class="panel"><h2>⚙️ Settings</h2><div class="info-row"><span>Company</span><strong id="settingsCompany">-</strong></div><div class="info-row"><span>Username</span><strong id="settingsUsername">-</strong></div><div class="info-row"><span>Role</span><strong id="settingsRole">-</strong></div><div class="info-row"><span>Email</span><strong id="settingsEmail">-</strong></div></div></div>
 
-    <h2>Add Fiber Point</h2>
+<div id="staffPage" class="hidden"><div class="panel"><h2>👷 Staff Panel</h2><p class="muted">Staff workspace. Use Point and Fiber Line tools from the menu to manage network data.</p></div></div>
 
+<div id="adminPage" class="hidden"><div class="panel"><h2>👑 Admin Panel</h2><p class="muted">Administrator workspace for company network management.</p><div class="info-row"><span>Company</span><strong id="adminCompany">-</strong></div><div class="info-row"><span>Your Role</span><strong id="adminRole">-</strong></div></div></div>
+</div></main></div></div>
 
-    <div class="field">
+<div id="pointModal" class="modal hidden"><div class="modal-card"><h2>Add Fiber Point</h2>
+<div class="field"><label>Name</label><input id="pointName" placeholder="Example: Box 01"></div>
+<div class="field"><label>Type</label><select id="pointType"><option>Fiber Box</option><option>OLT</option><option>POP</option><option>Joint</option><option>Other</option></select></div>
+<div class="field"><label>Fiber Code</label><input id="pointCode" placeholder="FB-001"></div>
+<div class="field"><label>Total Cores</label><input id="pointCores" type="number" min="0" value="0"></div>
+<div class="modal-actions"><button class="cancel" onclick="closePointModal()">Cancel</button><button class="save" onclick="savePoint()">Save</button></div></div></div>
 
-      <label>Name</label>
+<div id="lineModal" class="modal hidden"><div class="modal-card"><h2>Draw Fiber Line</h2>
+<div class="field"><label>Name</label><input id="lineName" placeholder="Example: Main Line 01"></div>
+<div class="field"><label>Fiber Code</label><input id="lineCode" placeholder="FL-001"></div>
+<div class="field"><label>Total Cores</label><input id="lineCores" type="number" min="0" value="0"></div>
+<div class="field"><label>Length (meters)</label><input id="lineLength" type="number" min="0" value="0"></div>
+<div class="modal-actions"><button class="cancel" onclick="closeLineModal()">Cancel</button><button class="save" onclick="saveLine()">Save</button></div></div></div>
 
-      <input
-        id="pointName"
-        placeholder="Example: Box 01"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Type</label>
-
-      <select id="pointType">
-
-        <option>Fiber Box</option>
-        <option>OLT</option>
-        <option>POP</option>
-        <option>Joint</option>
-        <option>Other</option>
-
-      </select>
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Fiber Code</label>
-
-      <input
-        id="pointCode"
-        placeholder="FB-001"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Total Cores</label>
-
-      <input
-        id="pointCores"
-        type="number"
-        value="0"
-      >
-
-    </div>
-
-
-    <div class="modal-actions">
-
-      <button
-        class="cancel"
-        onclick="closePointModal()"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="save"
-        onclick="savePoint()"
-      >
-        Save
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- LINE MODAL -->
-<div id="lineModal" class="modal hidden">
-
-  <div class="modal-card">
-
-    <h2>Add Fiber Line</h2>
-
-
-    <div class="field">
-
-      <label>Name</label>
-
-      <input
-        id="lineName"
-        placeholder="Example: Main Line 01"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Fiber Code</label>
-
-      <input
-        id="lineCode"
-        placeholder="FL-001"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Total Cores</label>
-
-      <input
-        id="lineCores"
-        type="number"
-        value="0"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Length (meters)</label>
-
-      <input
-        id="lineLength"
-        type="number"
-        value="0"
-      >
-
-    </div>
-
-
-    <div class="modal-actions">
-
-      <button
-        class="cancel"
-        onclick="closeLineModal()"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="save"
-        onclick="saveLine()"
-      >
-        Save
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
+<div id="toast" class="toast hidden"></div>
 
 <script>
+const SUPABASE_URL="https://traojcygtyfsgieqqvel.supabase.co";
+const SUPABASE_KEY="sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentUser=null,currentProfile=null,currentCompany=null,pointsCache=[],linesCache=[];
 
-/* ==========================================
-   SUPABASE CONFIG
-========================================== */
+document.addEventListener("DOMContentLoaded",async()=>{const {data:{session},error}=await client.auth.getSession();if(error||!session?.user){showLogin();return}await loadUser(session.user)});
+client.auth.onAuthStateChange((event)=>{if(event==="SIGNED_OUT")showLogin()});
 
-const SUPABASE_URL =
-  "https://traojcygtyfsgieqqvel.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT";
-
-const client =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-/* ==========================================
-   GLOBAL DATA
-========================================== */
-
-let currentUser = null;
-let currentProfile = null;
-let currentCompany = null;
-
-
-/* ==========================================
-   START APP
-========================================== */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  async () => {
-
-    const {
-      data: { session },
-      error
-    } = await client.auth.getSession();
-
-    if (error) {
-      console.error("Session error:", error);
-      showLogin();
-      return;
-    }
-
-    if (session && session.user) {
-
-      await loadUser(session.user);
-
-    } else {
-
-      showLogin();
-
-    }
-
-  }
-);
-
-
-/* ==========================================
-   LOGIN
-========================================== */
-
-async function login() {
-
-  const email =
-    document
-      .getElementById("email")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("password")
-      .value;
-
-  const errorBox =
-    document.getElementById("loginError");
-
-  errorBox.classList.add("hidden");
-  errorBox.textContent = "";
-
-
-  if (!email || !password) {
-
-    errorBox.textContent =
-      "Email and password are required.";
-
-    errorBox.classList.remove("hidden");
-
-    return;
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await client.auth.signInWithPassword({
-      email,
-      password
-    });
-
-
-  if (error) {
-
-    errorBox.textContent =
-      error.message;
-
-    errorBox.classList.remove("hidden");
-
-    return;
-  }
-
-
-  if (!data || !data.user) {
-
-    errorBox.textContent =
-      "Login failed. User information was not returned.";
-
-    errorBox.classList.remove("hidden");
-
-    return;
-  }
-
-
-  await loadUser(data.user);
-
+async function login(){
+ const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value,errorBox=document.getElementById("loginError");
+ errorBox.classList.add("hidden");errorBox.textContent="";
+ if(!email||!password){errorBox.textContent="Email and password are required.";errorBox.classList.remove("hidden");return}
+ const {data,error}=await client.auth.signInWithPassword({email,password});
+ if(error){errorBox.textContent=error.message;errorBox.classList.remove("hidden");return}
+ await loadUser(data.user);
 }
-
-
-/* ==========================================
-   LOAD USER
-   IMPORTANT:
-   Profile and company are loaded separately.
-   This avoids the previous nested .single()
-   problem.
-========================================== */
-
-async function loadUser(user) {
-
-  currentUser = user;
-
-
-  /*
-     LOAD PROFILE
-  */
-
-  const {
-    data: profile,
-    error: profileError
-  } = await client
-    .from("profiles")
-    .select(`
-      id,
-      full_name,
-      username,
-      role,
-      company_id
-    `)
-    .eq("id", user.id)
-    .maybeSingle();
-
-
-  if (profileError) {
-
-    console.error(
-      "Profile error:",
-      profileError
-    );
-
-    alert(
-      "Login successful, but profile could not be loaded.\n\n" +
-      profileError.message
-    );
-
-    return;
-  }
-
-
-  if (!profile) {
-
-    alert(
-      "Login successful, but no profile was found for this account."
-    );
-
-    return;
-  }
-
-
-  currentProfile = profile;
-
-
-  /*
-     LOAD COMPANY SEPARATELY
-  */
-
-  currentCompany = null;
-
-
-  if (profile.company_id) {
-
-    const {
-      data: company,
-      error: companyError
-    } = await client
-      .from("companies")
-      .select(`
-        id,
-        name,
-        code
-      `)
-      .eq("id", profile.company_id)
-      .maybeSingle();
-
-
-    if (companyError) {
-
-      console.error(
-        "Company error:",
-        companyError
-      );
-
-      alert(
-        "Profile loaded, but company could not be loaded.\n\n" +
-        companyError.message
-      );
-
-      return;
-    }
-
-
-    currentCompany = company;
-
-  }
-
-
-  /*
-     UPDATE UI
-  */
-
-  document.getElementById("userName").textContent =
-    profile.full_name ||
-    profile.username ||
-    user.email;
-
-
-  document.getElementById("roleName").textContent =
-    profile.role || "Staff";
-
-
-  document.getElementById("dashboardRole").textContent =
-    (profile.role || "Staff").toUpperCase();
-
-
-  document.getElementById("companyName").textContent =
-    currentCompany?.name ||
-    "No Company";
-
-
-  /*
-     SHOW APP
-  */
-
-  document
-    .getElementById("loginPage")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("app")
-    .classList.remove("hidden");
-
-
-  /*
-     LOAD DASHBOARD
-  */
-
-  await loadDashboard();
-
+async function loadUser(user){
+ currentUser=user;
+ const {data:profile,error:pe}=await client.from("profiles").select("id,full_name,username,role,company_id").eq("id",user.id).maybeSingle();
+ if(pe){alert("Profile error:\n\n"+pe.message);return} if(!profile){alert("No profile was found for this account.");return}
+ currentProfile=profile;currentCompany=null;
+ if(profile.company_id){const {data:company,error:ce}=await client.from("companies").select("id,name,code").eq("id",profile.company_id).maybeSingle();if(ce){alert("Company error:\n\n"+ce.message);return}currentCompany=company}
+ const displayName=profile.full_name||profile.username||user.email;
+ document.getElementById("userName").textContent=displayName;
+ document.getElementById("roleName").textContent=profile.role||"Staff";
+ document.getElementById("dashboardRole").textContent=(profile.role||"Staff").toUpperCase();
+ document.getElementById("companyName").textContent=currentCompany?.name||"No Company";
+ document.getElementById("settingsCompany").textContent=currentCompany?.name||"No Company";
+ document.getElementById("settingsUsername").textContent=profile.username||"-";
+ document.getElementById("settingsRole").textContent=profile.role||"Staff";
+ document.getElementById("settingsEmail").textContent=user.email||"-";
+ document.getElementById("adminCompany").textContent=currentCompany?.name||"-";
+ document.getElementById("adminRole").textContent=profile.role||"Staff";
+ const role=(profile.role||"staff").toLowerCase();
+ document.getElementById("adminMenu").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
+ document.getElementById("staffMenu").classList.toggle("hidden",role==="admin"||role==="owner"||role==="super_admin");
+ document.getElementById("loginPage").classList.add("hidden");document.getElementById("app").classList.remove("hidden");
+ await loadDashboard();
 }
-
-
-/* ==========================================
-   DASHBOARD
-========================================== */
-
-async function loadDashboard() {
-
-  if (!currentProfile) {
-    return;
-  }
-
-
-  const companyId =
-    currentProfile.company_id;
-
-
-  if (!companyId) {
-
-    alert(
-      "Your account is not assigned to a company."
-    );
-
-    return;
-  }
-
-
-  /* ========================================
-     POINTS
-  ======================================== */
-
-  const {
-    data: points,
-    error: pointsError
-  } = await client
-    .from("fiber_points")
-    .select("*")
-    .eq("company_id", companyId)
-    .order("created_at", {
-      ascending:false
-    });
-
-
-  if (pointsError) {
-
-    console.error(
-      "Fiber points error:",
-      pointsError
-    );
-
-  }
-
-
-  /* ========================================
-     BOXES
-  ======================================== */
-
-  const {
-    data: boxes,
-    error: boxesError
-  } = await client
-    .from("fiber_boxes")
-    .select("id")
-    .eq("company_id", companyId);
-
-
-  if (boxesError) {
-
-    console.error(
-      "Fiber boxes error:",
-      boxesError
-    );
-
-  }
-
-
-  /* ========================================
-     LINES
-  ======================================== */
-
-  const {
-    data: lines,
-    error: linesError
-  } = await client
-    .from("fiber_lines")
-    .select("*")
-    .eq("company_id", companyId)
-    .order("created_at", {
-      ascending:false
-    });
-
-
-  if (linesError) {
-
-    console.error(
-      "Fiber lines error:",
-      linesError
-    );
-
-  }
-
-
-  /*
-     UPDATE COUNTERS
-  */
-
-  document.getElementById("pointCount")
-    .textContent =
-      points?.length || 0;
-
-
-  document.getElementById("boxCount")
-    .textContent =
-      boxes?.length || 0;
-
-
-  document.getElementById("lineCount")
-    .textContent =
-      lines?.length || 0;
-
-
-  /*
-     RENDER TABLES
-  */
-
-  renderPoints(points || []);
-
-  renderLines(lines || []);
-
+async function loadDashboard(){
+ if(!currentProfile?.company_id){alert("Your account is not assigned to a company.");return}
+ const cid=currentProfile.company_id;
+ const p=await client.from("fiber_points").select("*").eq("company_id",cid).order("created_at",{ascending:false});
+ const b=await client.from("fiber_boxes").select("id").eq("company_id",cid);
+ const l=await client.from("fiber_lines").select("*").eq("company_id",cid).order("created_at",{ascending:false});
+ if(p.error)console.error("Fiber points:",p.error);if(b.error)console.error("Fiber boxes:",b.error);if(l.error)console.error("Fiber lines:",l.error);
+ pointsCache=p.data||[];linesCache=l.data||[];
+ document.getElementById("pointCount").textContent=pointsCache.length;
+ document.getElementById("boxCount").textContent=(b.data||[]).length;
+ document.getElementById("lineCount").textContent=linesCache.length;
+ renderPoints(pointsCache);renderLines(linesCache);
 }
-
-
-/* ==========================================
-   RENDER POINTS
-========================================== */
-
-function renderPoints(points) {
-
-  const table =
-    document.getElementById("pointsTable");
-
-
-  if (!points.length) {
-
-    table.innerHTML = `
-      <tr>
-        <td colspan="5" class="muted">
-          No fiber points yet.
-        </td>
-      </tr>
-    `;
-
-    return;
-  }
-
-
-  table.innerHTML =
-    points.map(point => `
-
-      <tr>
-
-        <td>
-          ${escapeHtml(point.name || "")}
-        </td>
-
-        <td>
-          ${escapeHtml(
-            point.point_type || "Fiber Box"
-          )}
-        </td>
-
-        <td>
-          ${escapeHtml(
-            point.fiber_code || "-"
-          )}
-        </td>
-
-        <td>
-          ${point.used_cores || 0}/${point.total_cores || 0}
-        </td>
-
-        <td>
-
-          <span class="badge">
-            ${escapeHtml(
-              point.status || "active"
-            )}
-          </span>
-
-        </td>
-
-      </tr>
-
-    `).join("");
-
+function renderPoints(points){
+ const t=document.getElementById("pointsTable");if(!points.length){t.innerHTML='<tr><td colspan="5" class="muted">No fiber points yet.</td></tr>';return}
+ t.innerHTML=points.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.point_type||"Fiber Box")}</td><td>${esc(x.fiber_code||"-")}</td><td>${x.used_cores||0}/${x.total_cores||0}</td><td><span class="badge">${esc(x.status||"active")}</span></td></tr>`).join("");
 }
-
-
-/* ==========================================
-   RENDER LINES
-========================================== */
-
-function renderLines(lines) {
-
-  const table =
-    document.getElementById("linesTable");
-
-
-  if (!lines.length) {
-
-    table.innerHTML = `
-      <tr>
-        <td colspan="5" class="muted">
-          No fiber lines yet.
-        </td>
-      </tr>
-    `;
-
-    return;
-  }
-
-
-  table.innerHTML =
-    lines.map(line => `
-
-      <tr>
-
-        <td>
-          ${escapeHtml(line.name || "")}
-        </td>
-
-        <td>
-          ${escapeHtml(
-            line.fiber_code || "-"
-          )}
-        </td>
-
-        <td>
-          ${line.used_cores || 0}/${line.total_cores || 0}
-        </td>
-
-        <td>
-          ${line.length_meters || 0} m
-        </td>
-
-        <td>
-
-          <span class="badge">
-            ${escapeHtml(
-              line.status || "active"
-            )}
-          </span>
-
-        </td>
-
-      </tr>
-
-    `).join("");
-
+function renderLines(lines){
+ const t=document.getElementById("linesTable");if(!lines.length){t.innerHTML='<tr><td colspan="5" class="muted">No fiber lines yet.</td></tr>';return}
+ t.innerHTML=lines.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.fiber_code||"-")}</td><td>${x.used_cores||0}/${x.total_cores||0}</td><td>${x.length_meters||0} m</td><td><span class="badge">${esc(x.status||"active")}</span></td></tr>`).join("");
 }
-
-
-/* ==========================================
-   ADD POINT
-========================================== */
-
-function openPointModal() {
-
-  document
-    .getElementById("pointModal")
-    .classList.remove("hidden");
-
+function openPointModal(){document.getElementById("pointModal").classList.remove("hidden")}
+function closePointModal(){document.getElementById("pointModal").classList.add("hidden")}
+function openLineModal(){document.getElementById("lineModal").classList.remove("hidden")}
+function closeLineModal(){document.getElementById("lineModal").classList.add("hidden")}
+async function savePoint(){
+ if(!currentUser||!currentProfile){alert("Please login again.");return}
+ const name=document.getElementById("pointName").value.trim(),type=document.getElementById("pointType").value,code=document.getElementById("pointCode").value.trim(),cores=Math.max(0,Number(document.getElementById("pointCores").value||0));
+ if(!name){alert("Point name is required.");return}
+ const {error}=await client.from("fiber_points").insert({company_id:currentProfile.company_id,name,point_type:type,fiber_code:code||null,total_cores:cores,used_cores:0,status:"active",created_by:currentUser.id});
+ if(error){alert(error.message);return}
+ document.getElementById("pointName").value="";document.getElementById("pointCode").value="";document.getElementById("pointCores").value="0";closePointModal();toast("Fiber Point added successfully");await loadDashboard();
 }
-
-
-function closePointModal() {
-
-  document
-    .getElementById("pointModal")
-    .classList.add("hidden");
-
+async function saveLine(){
+ if(!currentUser||!currentProfile){alert("Please login again.");return}
+ const name=document.getElementById("lineName").value.trim(),code=document.getElementById("lineCode").value.trim(),cores=Math.max(0,Number(document.getElementById("lineCores").value||0)),length=Math.max(0,Number(document.getElementById("lineLength").value||0));
+ if(!name){alert("Line name is required.");return}
+ const {error}=await client.from("fiber_lines").insert({company_id:currentProfile.company_id,name,fiber_code:code||null,total_cores:cores,used_cores:0,length_meters:length,status:"active",created_by:currentUser.id});
+ if(error){alert(error.message);return}
+ document.getElementById("lineName").value="";document.getElementById("lineCode").value="";document.getElementById("lineCores").value="0";document.getElementById("lineLength").value="0";closeLineModal();toast("Fiber Line added successfully");await loadDashboard();
 }
-
-
-async function savePoint() {
-
-  if (!currentUser || !currentProfile) {
-
-    alert("Please login again.");
-
-    return;
-  }
-
-
-  const name =
-    document
-      .getElementById("pointName")
-      .value
-      .trim();
-
-
-  const type =
-    document
-      .getElementById("pointType")
-      .value;
-
-
-  const code =
-    document
-      .getElementById("pointCode")
-      .value
-      .trim();
-
-
-  const cores =
-    Number(
-      document
-        .getElementById("pointCores")
-        .value || 0
-    );
-
-
-  if (!name) {
-
-    alert(
-      "Point name is required."
-    );
-
-    return;
-  }
-
-
-  const {
-    error
-  } =
-    await client
-      .from("fiber_points")
-      .insert({
-
-        company_id:
-          currentProfile.company_id,
-
-        name:
-          name,
-
-        point_type:
-          type,
-
-        fiber_code:
-          code || null,
-
-        total_cores:
-          cores,
-
-        used_cores:
-          0,
-
-        status:
-          "active",
-
-        created_by:
-          currentUser.id
-
-      });
-
-
-  if (error) {
-
-    console.error(
-      "Save point error:",
-      error
-    );
-
-    alert(error.message);
-
-    return;
-  }
-
-
-  document.getElementById(
-    "pointName"
-  ).value = "";
-
-
-  document.getElementById(
-    "pointCode"
-  ).value = "";
-
-
-  document.getElementById(
-    "pointCores"
-  ).value = "0";
-
-
-  closePointModal();
-
-  await loadDashboard();
-
+function showPage(page,btn){
+ ["dashboard","points","lines","settings","staff","admin"].forEach(x=>document.getElementById(x+"Page").classList.add("hidden"));
+ document.getElementById(page+"Page").classList.remove("hidden");
+ document.querySelectorAll(".menu-item").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");closeMenu();
 }
-
-
-/* ==========================================
-   ADD LINE
-========================================== */
-
-function openLineModal() {
-
-  document
-    .getElementById("lineModal")
-    .classList.remove("hidden");
-
+async function refreshData(){await loadDashboard();toast("Data refreshed");closeMenu()}
+function toggleMenu(){document.getElementById("sidebar").classList.toggle("open");document.getElementById("overlay").classList.toggle("show")}
+function closeMenu(){document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("show")}
+function myLocation(){
+ if(!navigator.geolocation){toast("Location is not supported by this browser");return}
+ toast("Requesting your location...");
+ navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude.toFixed(6),lon=pos.coords.longitude.toFixed(6);toast(`Location: ${lat}, ${lon}`)},err=>toast("Location permission was not allowed"));
+ closeMenu();
 }
-
-
-function closeLineModal() {
-
-  document
-    .getElementById("lineModal")
-    .classList.add("hidden");
-
-}
-
-
-async function saveLine() {
-
-  if (!currentUser || !currentProfile) {
-
-    alert("Please login again.");
-
-    return;
-  }
-
-
-  const name =
-    document
-      .getElementById("lineName")
-      .value
-      .trim();
-
-
-  const code =
-    document
-      .getElementById("lineCode")
-      .value
-      .trim();
-
-
-  const cores =
-    Number(
-      document
-        .getElementById("lineCores")
-        .value || 0
-    );
-
-
-  const length =
-    Number(
-      document
-        .getElementById("lineLength")
-        .value || 0
-    );
-
-
-  if (!name) {
-
-    alert(
-      "Line name is required."
-    );
-
-    return;
-  }
-
-
-  const {
-    error
-  } =
-    await client
-      .from("fiber_lines")
-      .insert({
-
-        company_id:
-          currentProfile.company_id,
-
-        name:
-          name,
-
-        fiber_code:
-          code || null,
-
-        total_cores:
-          cores,
-
-        used_cores:
-          0,
-
-        length_meters:
-          length,
-
-        status:
-          "active",
-
-        created_by:
-          currentUser.id
-
-      });
-
-
-  if (error) {
-
-    console.error(
-      "Save line error:",
-      error
-    );
-
-    alert(error.message);
-
-    return;
-  }
-
-
-  document.getElementById(
-    "lineName"
-  ).value = "";
-
-
-  document.getElementById(
-    "lineCode"
-  ).value = "";
-
-
-  document.getElementById(
-    "lineCores"
-  ).value = "0";
-
-
-  document.getElementById(
-    "lineLength"
-  ).value = "0";
-
-
-  closeLineModal();
-
-  await loadDashboard();
-
-}
-
-
-/* ==========================================
-   LOGOUT
-========================================== */
-
-async function logout() {
-
-  await client.auth.signOut();
-
-  currentUser = null;
-  currentProfile = null;
-  currentCompany = null;
-
-
-  document
-    .getElementById("app")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("loginPage")
-    .classList.remove("hidden");
-
-
-  document.getElementById(
-    "email"
-  ).value = "";
-
-
-  document.getElementById(
-    "password"
-  ).value = "";
-
-}
-
-
-/* ==========================================
-   SECURITY / HTML ESCAPE
-========================================== */
-
-function escapeHtml(value) {
-
-  return String(value)
-
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
-
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
-
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
-
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
-
-    .replaceAll(
-      "'",
-      "&#039;"
-    );
-
-}
-
-
-/* ==========================================
-   AUTH STATE
-========================================== */
-
-client.auth.onAuthStateChange(
-  async (event, session) => {
-
-    if (event === "SIGNED_OUT") {
-
-      showLogin();
-
-    }
-
-  }
-);
-
-
-/* ==========================================
-   SHOW LOGIN
-========================================== */
-
-function showLogin() {
-
-  document
-    .getElementById("app")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("loginPage")
-    .classList.remove("hidden");
-
-}
-
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.add("hidden"),3000)}
+async function logout(){await client.auth.signOut();currentUser=null;currentProfile=null;currentCompany=null;showLogin()}
+function showLogin(){document.getElementById("app").classList.add("hidden");document.getElementById("loginPage").classList.remove("hidden")}
+function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 </script>
-
 </body>
 </html>
