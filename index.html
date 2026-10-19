@@ -9,15 +9,16 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
   background:#f4f7fb;
   color:#172033;
 }
+
 button,input,select{font:inherit}
 button{cursor:pointer}
-
 .hidden{display:none!important}
 
 .login-page{
@@ -46,9 +47,7 @@ button{cursor:pointer}
 
 .muted{color:#667085}
 
-.field{
-  margin-top:16px;
-}
+.field{margin-top:16px}
 
 .field label{
   display:block;
@@ -56,12 +55,18 @@ button{cursor:pointer}
   margin-bottom:7px;
 }
 
-.field input,.field select{
+.field input,
+.field select{
   width:100%;
   padding:12px;
   border:1px solid #d7dce5;
   border-radius:9px;
   outline:none;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:#2563eb;
 }
 
 .primary{
@@ -248,13 +253,23 @@ th{
 }
 
 @media(max-width:800px){
-  .grid{grid-template-columns:repeat(2,1fr)}
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
 @media(max-width:500px){
-  .grid{grid-template-columns:1fr}
-  .container{padding:15px}
-  .topbar{padding:0 14px}
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .container{
+    padding:15px;
+  }
+
+  .topbar{
+    padding:0 14px;
+  }
 }
 </style>
 </head>
@@ -263,24 +278,41 @@ th{
 
 <!-- LOGIN -->
 <div id="loginPage" class="login-page">
+
   <div class="login-card">
+
     <div class="logo">FiberPilot</div>
-    <div class="muted">Fiber Network Management</div>
+
+    <div class="muted">
+      Fiber Network Management
+    </div>
 
     <div class="field">
       <label>Email</label>
-      <input id="email" type="email" placeholder="admin@example.com">
+      <input
+        id="email"
+        type="email"
+        placeholder="admin@example.com"
+      >
     </div>
 
     <div class="field">
       <label>Password</label>
-      <input id="password" type="password" placeholder="Password">
+      <input
+        id="password"
+        type="password"
+        placeholder="Password"
+      >
     </div>
 
-    <button class="primary" onclick="login()">Login</button>
+    <button class="primary" onclick="login()">
+      Login
+    </button>
 
     <div id="loginError" class="error hidden"></div>
+
   </div>
+
 </div>
 
 
@@ -288,44 +320,88 @@ th{
 <div id="app" class="app hidden">
 
   <div class="topbar">
-    <div class="brand">FiberPilot</div>
+
+    <div class="brand">
+      FiberPilot
+    </div>
 
     <div class="user-area">
+
       <span id="userName"></span>
-      <button class="logout" onclick="logout()">Logout</button>
+
+      <button class="logout" onclick="logout()">
+        Logout
+      </button>
+
     </div>
+
   </div>
+
 
   <div class="container">
 
     <div class="company">
-      <h1 id="companyName">Dashboard</h1>
+
+      <h1 id="companyName">
+        Dashboard
+      </h1>
+
       <div class="muted">
-        Logged in as <strong id="roleName"></strong>
+        Logged in as
+        <strong id="roleName"></strong>
       </div>
+
     </div>
+
 
     <!-- STATS -->
     <div class="grid">
 
       <div class="card">
-        <div class="card-title">Fiber Points</div>
-        <div id="pointCount" class="number">0</div>
+        <div class="card-title">
+          Fiber Points
+        </div>
+
+        <div id="pointCount" class="number">
+          0
+        </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Fiber Boxes</div>
-        <div id="boxCount" class="number">0</div>
-      </div>
 
       <div class="card">
-        <div class="card-title">Fiber Lines</div>
-        <div id="lineCount" class="number">0</div>
+        <div class="card-title">
+          Fiber Boxes
+        </div>
+
+        <div id="boxCount" class="number">
+          0
+        </div>
       </div>
 
+
       <div class="card">
-        <div class="card-title">Role</div>
-        <div id="dashboardRole" class="number" style="font-size:22px">-</div>
+        <div class="card-title">
+          Fiber Lines
+        </div>
+
+        <div id="lineCount" class="number">
+          0
+        </div>
+      </div>
+
+
+      <div class="card">
+        <div class="card-title">
+          Role
+        </div>
+
+        <div
+          id="dashboardRole"
+          class="number"
+          style="font-size:22px"
+        >
+          -
+        </div>
       </div>
 
     </div>
@@ -335,12 +411,23 @@ th{
     <div class="section">
 
       <div class="section-head">
+
         <h2>Fiber Points</h2>
-        <button class="add-btn" onclick="openPointModal()">+ Add Point</button>
+
+        <button
+          class="add-btn"
+          onclick="openPointModal()"
+        >
+          + Add Point
+        </button>
+
       </div>
 
+
       <div class="table-wrap">
+
         <table>
+
           <thead>
             <tr>
               <th>Name</th>
@@ -352,7 +439,9 @@ th{
           </thead>
 
           <tbody id="pointsTable"></tbody>
+
         </table>
+
       </div>
 
     </div>
@@ -362,12 +451,23 @@ th{
     <div class="section">
 
       <div class="section-head">
+
         <h2>Fiber Lines</h2>
-        <button class="add-btn" onclick="openLineModal()">+ Add Line</button>
+
+        <button
+          class="add-btn"
+          onclick="openLineModal()"
+        >
+          + Add Line
+        </button>
+
       </div>
 
+
       <div class="table-wrap">
+
         <table>
+
           <thead>
             <tr>
               <th>Name</th>
@@ -379,92 +479,186 @@ th{
           </thead>
 
           <tbody id="linesTable"></tbody>
+
         </table>
+
       </div>
 
     </div>
 
   </div>
+
 </div>
 
 
 <!-- POINT MODAL -->
 <div id="pointModal" class="modal hidden">
+
   <div class="modal-card">
 
     <h2>Add Fiber Point</h2>
 
-    <div class="field">
-      <label>Name</label>
-      <input id="pointName" placeholder="Example: Box 01">
-    </div>
 
     <div class="field">
+
+      <label>Name</label>
+
+      <input
+        id="pointName"
+        placeholder="Example: Box 01"
+      >
+
+    </div>
+
+
+    <div class="field">
+
       <label>Type</label>
+
       <select id="pointType">
+
         <option>Fiber Box</option>
         <option>OLT</option>
         <option>POP</option>
         <option>Joint</option>
         <option>Other</option>
+
       </select>
+
     </div>
 
+
     <div class="field">
+
       <label>Fiber Code</label>
-      <input id="pointCode" placeholder="FB-001">
+
+      <input
+        id="pointCode"
+        placeholder="FB-001"
+      >
+
     </div>
 
+
     <div class="field">
+
       <label>Total Cores</label>
-      <input id="pointCores" type="number" value="0">
+
+      <input
+        id="pointCores"
+        type="number"
+        value="0"
+      >
+
     </div>
+
 
     <div class="modal-actions">
-      <button class="cancel" onclick="closePointModal()">Cancel</button>
-      <button class="save" onclick="savePoint()">Save</button>
+
+      <button
+        class="cancel"
+        onclick="closePointModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="save"
+        onclick="savePoint()"
+      >
+        Save
+      </button>
+
     </div>
 
   </div>
+
 </div>
 
 
 <!-- LINE MODAL -->
 <div id="lineModal" class="modal hidden">
+
   <div class="modal-card">
 
     <h2>Add Fiber Line</h2>
 
+
     <div class="field">
+
       <label>Name</label>
-      <input id="lineName" placeholder="Example: Main Line 01">
+
+      <input
+        id="lineName"
+        placeholder="Example: Main Line 01"
+      >
+
     </div>
 
+
     <div class="field">
+
       <label>Fiber Code</label>
-      <input id="lineCode" placeholder="FL-001">
+
+      <input
+        id="lineCode"
+        placeholder="FL-001"
+      >
+
     </div>
 
+
     <div class="field">
+
       <label>Total Cores</label>
-      <input id="lineCores" type="number" value="0">
+
+      <input
+        id="lineCores"
+        type="number"
+        value="0"
+      >
+
     </div>
 
+
     <div class="field">
+
       <label>Length (meters)</label>
-      <input id="lineLength" type="number" value="0">
+
+      <input
+        id="lineLength"
+        type="number"
+        value="0"
+      >
+
     </div>
+
 
     <div class="modal-actions">
-      <button class="cancel" onclick="closeLineModal()">Cancel</button>
-      <button class="save" onclick="saveLine()">Save</button>
+
+      <button
+        class="cancel"
+        onclick="closeLineModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="save"
+        onclick="saveLine()"
+      >
+        Save
+      </button>
+
     </div>
 
   </div>
+
 </div>
 
 
 <script>
+
 /* ==========================================
    SUPABASE CONFIG
 ========================================== */
@@ -475,10 +669,11 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT";
 
-const client = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const client =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
 /* ==========================================
@@ -487,25 +682,40 @@ const client = window.supabase.createClient(
 
 let currentUser = null;
 let currentProfile = null;
+let currentCompany = null;
 
 
 /* ==========================================
    START APP
 ========================================== */
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
 
-  const {
-    data: { session }
-  } = await client.auth.getSession();
+    const {
+      data: { session },
+      error
+    } = await client.auth.getSession();
 
-  if (session) {
-    await loadUser(session.user);
-  } else {
-    showLogin();
+    if (error) {
+      console.error("Session error:", error);
+      showLogin();
+      return;
+    }
+
+    if (session && session.user) {
+
+      await loadUser(session.user);
+
+    } else {
+
+      showLogin();
+
+    }
+
   }
-
-});
+);
 
 
 /* ==========================================
@@ -515,54 +725,91 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function login() {
 
   const email =
-    document.getElementById("email").value.trim();
+    document
+      .getElementById("email")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value;
+    document
+      .getElementById("password")
+      .value;
 
   const errorBox =
     document.getElementById("loginError");
 
   errorBox.classList.add("hidden");
+  errorBox.textContent = "";
+
 
   if (!email || !password) {
+
     errorBox.textContent =
       "Email and password are required.";
+
     errorBox.classList.remove("hidden");
+
     return;
   }
+
 
   const {
     data,
     error
-  } = await client.auth.signInWithPassword({
-    email,
-    password
-  });
+  } =
+    await client.auth.signInWithPassword({
+      email,
+      password
+    });
+
 
   if (error) {
 
-    errorBox.textContent = error.message;
+    errorBox.textContent =
+      error.message;
+
     errorBox.classList.remove("hidden");
 
     return;
   }
 
+
+  if (!data || !data.user) {
+
+    errorBox.textContent =
+      "Login failed. User information was not returned.";
+
+    errorBox.classList.remove("hidden");
+
+    return;
+  }
+
+
   await loadUser(data.user);
+
 }
 
 
 /* ==========================================
    LOAD USER
+   IMPORTANT:
+   Profile and company are loaded separately.
+   This avoids the previous nested .single()
+   problem.
 ========================================== */
 
 async function loadUser(user) {
 
   currentUser = user;
 
+
+  /*
+     LOAD PROFILE
+  */
+
   const {
     data: profile,
-    error
+    error: profileError
   } = await client
     .from("profiles")
     .select(`
@@ -570,47 +817,125 @@ async function loadUser(user) {
       full_name,
       username,
       role,
-      company_id,
-      companies:company_id (
-        id,
-        name,
-        code
-      )
+      company_id
     `)
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
-  if (error) {
+
+  if (profileError) {
+
+    console.error(
+      "Profile error:",
+      profileError
+    );
 
     alert(
       "Login successful, but profile could not be loaded.\n\n" +
-      error.message
+      profileError.message
     );
 
     return;
   }
 
+
+  if (!profile) {
+
+    alert(
+      "Login successful, but no profile was found for this account."
+    );
+
+    return;
+  }
+
+
   currentProfile = profile;
+
+
+  /*
+     LOAD COMPANY SEPARATELY
+  */
+
+  currentCompany = null;
+
+
+  if (profile.company_id) {
+
+    const {
+      data: company,
+      error: companyError
+    } = await client
+      .from("companies")
+      .select(`
+        id,
+        name,
+        code
+      `)
+      .eq("id", profile.company_id)
+      .maybeSingle();
+
+
+    if (companyError) {
+
+      console.error(
+        "Company error:",
+        companyError
+      );
+
+      alert(
+        "Profile loaded, but company could not be loaded.\n\n" +
+        companyError.message
+      );
+
+      return;
+    }
+
+
+    currentCompany = company;
+
+  }
+
+
+  /*
+     UPDATE UI
+  */
 
   document.getElementById("userName").textContent =
     profile.full_name ||
     profile.username ||
     user.email;
 
+
   document.getElementById("roleName").textContent =
-    profile.role;
+    profile.role || "Staff";
+
 
   document.getElementById("dashboardRole").textContent =
-    profile.role.toUpperCase();
+    (profile.role || "Staff").toUpperCase();
+
 
   document.getElementById("companyName").textContent =
-    profile.companies?.name || "No Company";
+    currentCompany?.name ||
+    "No Company";
 
-  document.getElementById("loginPage")
+
+  /*
+     SHOW APP
+  */
+
+  document
+    .getElementById("loginPage")
     .classList.add("hidden");
 
-  document.getElementById("app")
+
+  document
+    .getElementById("app")
     .classList.remove("hidden");
+
+
+  /*
+     LOAD DASHBOARD
+  */
 
   await loadDashboard();
 
@@ -623,16 +948,28 @@ async function loadUser(user) {
 
 async function loadDashboard() {
 
-  const companyId =
-    currentProfile.company_id;
-
-  if (!companyId) {
-    alert("Your account is not assigned to a company.");
+  if (!currentProfile) {
     return;
   }
 
 
-  /* POINTS */
+  const companyId =
+    currentProfile.company_id;
+
+
+  if (!companyId) {
+
+    alert(
+      "Your account is not assigned to a company."
+    );
+
+    return;
+  }
+
+
+  /* ========================================
+     POINTS
+  ======================================== */
 
   const {
     data: points,
@@ -642,16 +979,23 @@ async function loadDashboard() {
     .select("*")
     .eq("company_id", companyId)
     .order("created_at", {
-      ascending: false
+      ascending:false
     });
 
+
   if (pointsError) {
-    console.error(pointsError);
-    return;
+
+    console.error(
+      "Fiber points error:",
+      pointsError
+    );
+
   }
 
 
-  /* BOXES */
+  /* ========================================
+     BOXES
+  ======================================== */
 
   const {
     data: boxes,
@@ -661,12 +1005,20 @@ async function loadDashboard() {
     .select("id")
     .eq("company_id", companyId);
 
+
   if (boxesError) {
-    console.error(boxesError);
+
+    console.error(
+      "Fiber boxes error:",
+      boxesError
+    );
+
   }
 
 
-  /* LINES */
+  /* ========================================
+     LINES
+  ======================================== */
 
   const {
     data: lines,
@@ -676,26 +1028,45 @@ async function loadDashboard() {
     .select("*")
     .eq("company_id", companyId)
     .order("created_at", {
-      ascending: false
+      ascending:false
     });
 
+
   if (linesError) {
-    console.error(linesError);
-    return;
+
+    console.error(
+      "Fiber lines error:",
+      linesError
+    );
+
   }
 
 
+  /*
+     UPDATE COUNTERS
+  */
+
   document.getElementById("pointCount")
-    .textContent = points?.length || 0;
+    .textContent =
+      points?.length || 0;
+
 
   document.getElementById("boxCount")
-    .textContent = boxes?.length || 0;
+    .textContent =
+      boxes?.length || 0;
+
 
   document.getElementById("lineCount")
-    .textContent = lines?.length || 0;
+    .textContent =
+      lines?.length || 0;
 
+
+  /*
+     RENDER TABLES
+  */
 
   renderPoints(points || []);
+
   renderLines(lines || []);
 
 }
@@ -710,6 +1081,7 @@ function renderPoints(points) {
   const table =
     document.getElementById("pointsTable");
 
+
   if (!points.length) {
 
     table.innerHTML = `
@@ -723,25 +1095,40 @@ function renderPoints(points) {
     return;
   }
 
+
   table.innerHTML =
     points.map(point => `
 
       <tr>
 
-        <td>${escapeHtml(point.name || "")}</td>
+        <td>
+          ${escapeHtml(point.name || "")}
+        </td>
 
-        <td>${escapeHtml(point.point_type || "Fiber Box")}</td>
+        <td>
+          ${escapeHtml(
+            point.point_type || "Fiber Box"
+          )}
+        </td>
 
-        <td>${escapeHtml(point.fiber_code || "-")}</td>
+        <td>
+          ${escapeHtml(
+            point.fiber_code || "-"
+          )}
+        </td>
 
         <td>
           ${point.used_cores || 0}/${point.total_cores || 0}
         </td>
 
         <td>
+
           <span class="badge">
-            ${escapeHtml(point.status || "active")}
+            ${escapeHtml(
+              point.status || "active"
+            )}
           </span>
+
         </td>
 
       </tr>
@@ -760,6 +1147,7 @@ function renderLines(lines) {
   const table =
     document.getElementById("linesTable");
 
+
   if (!lines.length) {
 
     table.innerHTML = `
@@ -773,14 +1161,21 @@ function renderLines(lines) {
     return;
   }
 
+
   table.innerHTML =
     lines.map(line => `
 
       <tr>
 
-        <td>${escapeHtml(line.name || "")}</td>
+        <td>
+          ${escapeHtml(line.name || "")}
+        </td>
 
-        <td>${escapeHtml(line.fiber_code || "-")}</td>
+        <td>
+          ${escapeHtml(
+            line.fiber_code || "-"
+          )}
+        </td>
 
         <td>
           ${line.used_cores || 0}/${line.total_cores || 0}
@@ -791,9 +1186,13 @@ function renderLines(lines) {
         </td>
 
         <td>
+
           <span class="badge">
-            ${escapeHtml(line.status || "active")}
+            ${escapeHtml(
+              line.status || "active"
+            )}
           </span>
+
         </td>
 
       </tr>
@@ -808,68 +1207,132 @@ function renderLines(lines) {
 ========================================== */
 
 function openPointModal() {
+
   document
     .getElementById("pointModal")
     .classList.remove("hidden");
+
 }
 
+
 function closePointModal() {
+
   document
     .getElementById("pointModal")
     .classList.add("hidden");
+
 }
 
 
 async function savePoint() {
 
+  if (!currentUser || !currentProfile) {
+
+    alert("Please login again.");
+
+    return;
+  }
+
+
   const name =
-    document.getElementById("pointName")
-      .value.trim();
+    document
+      .getElementById("pointName")
+      .value
+      .trim();
+
 
   const type =
-    document.getElementById("pointType")
+    document
+      .getElementById("pointType")
       .value;
 
+
   const code =
-    document.getElementById("pointCode")
-      .value.trim();
+    document
+      .getElementById("pointCode")
+      .value
+      .trim();
+
 
   const cores =
     Number(
-      document.getElementById("pointCores")
+      document
+        .getElementById("pointCores")
         .value || 0
     );
 
+
   if (!name) {
-    alert("Point name is required.");
+
+    alert(
+      "Point name is required."
+    );
+
     return;
   }
+
 
   const {
     error
-  } = await client
-    .from("fiber_points")
-    .insert({
-      company_id: currentProfile.company_id,
-      name: name,
-      point_type: type,
-      fiber_code: code || null,
-      total_cores: cores,
-      used_cores: 0,
-      status: "active",
-      created_by: currentUser.id
-    });
+  } =
+    await client
+      .from("fiber_points")
+      .insert({
+
+        company_id:
+          currentProfile.company_id,
+
+        name:
+          name,
+
+        point_type:
+          type,
+
+        fiber_code:
+          code || null,
+
+        total_cores:
+          cores,
+
+        used_cores:
+          0,
+
+        status:
+          "active",
+
+        created_by:
+          currentUser.id
+
+      });
+
 
   if (error) {
 
-    alert(error.message);
-    return;
+    console.error(
+      "Save point error:",
+      error
+    );
 
+    alert(error.message);
+
+    return;
   }
 
-  document.getElementById("pointName").value = "";
-  document.getElementById("pointCode").value = "";
-  document.getElementById("pointCores").value = "0";
+
+  document.getElementById(
+    "pointName"
+  ).value = "";
+
+
+  document.getElementById(
+    "pointCode"
+  ).value = "";
+
+
+  document.getElementById(
+    "pointCores"
+  ).value = "0";
+
 
   closePointModal();
 
@@ -883,71 +1346,139 @@ async function savePoint() {
 ========================================== */
 
 function openLineModal() {
+
   document
     .getElementById("lineModal")
     .classList.remove("hidden");
+
 }
 
+
 function closeLineModal() {
+
   document
     .getElementById("lineModal")
     .classList.add("hidden");
+
 }
 
 
 async function saveLine() {
 
+  if (!currentUser || !currentProfile) {
+
+    alert("Please login again.");
+
+    return;
+  }
+
+
   const name =
-    document.getElementById("lineName")
-      .value.trim();
+    document
+      .getElementById("lineName")
+      .value
+      .trim();
+
 
   const code =
-    document.getElementById("lineCode")
-      .value.trim();
+    document
+      .getElementById("lineCode")
+      .value
+      .trim();
+
 
   const cores =
     Number(
-      document.getElementById("lineCores")
+      document
+        .getElementById("lineCores")
         .value || 0
     );
+
 
   const length =
     Number(
-      document.getElementById("lineLength")
+      document
+        .getElementById("lineLength")
         .value || 0
     );
 
+
   if (!name) {
-    alert("Line name is required.");
+
+    alert(
+      "Line name is required."
+    );
+
     return;
   }
+
 
   const {
     error
-  } = await client
-    .from("fiber_lines")
-    .insert({
-      company_id: currentProfile.company_id,
-      name: name,
-      fiber_code: code || null,
-      total_cores: cores,
-      used_cores: 0,
-      length_meters: length,
-      status: "active",
-      created_by: currentUser.id
-    });
+  } =
+    await client
+      .from("fiber_lines")
+      .insert({
+
+        company_id:
+          currentProfile.company_id,
+
+        name:
+          name,
+
+        fiber_code:
+          code || null,
+
+        total_cores:
+          cores,
+
+        used_cores:
+          0,
+
+        length_meters:
+          length,
+
+        status:
+          "active",
+
+        created_by:
+          currentUser.id
+
+      });
+
 
   if (error) {
 
-    alert(error.message);
-    return;
+    console.error(
+      "Save line error:",
+      error
+    );
 
+    alert(error.message);
+
+    return;
   }
 
-  document.getElementById("lineName").value = "";
-  document.getElementById("lineCode").value = "";
-  document.getElementById("lineCores").value = "0";
-  document.getElementById("lineLength").value = "0";
+
+  document.getElementById(
+    "lineName"
+  ).value = "";
+
+
+  document.getElementById(
+    "lineCode"
+  ).value = "";
+
+
+  document.getElementById(
+    "lineCores"
+  ).value = "0";
+
+
+  document.getElementById(
+    "lineLength"
+  ).value = "0";
+
 
   closeLineModal();
 
@@ -966,15 +1497,27 @@ async function logout() {
 
   currentUser = null;
   currentProfile = null;
+  currentCompany = null;
 
-  document.getElementById("app")
+
+  document
+    .getElementById("app")
     .classList.add("hidden");
 
-  document.getElementById("loginPage")
+
+  document
+    .getElementById("loginPage")
     .classList.remove("hidden");
 
-  document.getElementById("email").value = "";
-  document.getElementById("password").value = "";
+
+  document.getElementById(
+    "email"
+  ).value = "";
+
+
+  document.getElementById(
+    "password"
+  ).value = "";
 
 }
 
@@ -986,11 +1529,31 @@ async function logout() {
 function escapeHtml(value) {
 
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
@@ -1003,22 +1566,32 @@ client.auth.onAuthStateChange(
   async (event, session) => {
 
     if (event === "SIGNED_OUT") {
+
       showLogin();
+
     }
 
   }
 );
 
 
+/* ==========================================
+   SHOW LOGIN
+========================================== */
+
 function showLogin() {
 
-  document.getElementById("app")
+  document
+    .getElementById("app")
     .classList.add("hidden");
 
-  document.getElementById("loginPage")
+
+  document
+    .getElementById("loginPage")
     .classList.remove("hidden");
 
 }
+
 </script>
 
 </body>
