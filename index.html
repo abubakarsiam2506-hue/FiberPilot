@@ -192,6 +192,16 @@ const SUPABASE_KEY="sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT";
 const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,currentProfile=null,currentCompany=null,pointsCache=[],linesCache=[];
 
+// Safe DOM helpers: missing optional elements must never break login or dashboard loading.
+function setText(id,value){
+  const el=document.getElementById(id);
+  if(el) el.textContent=String(value ?? "");
+}
+function setHidden(id,hidden){
+  const el=document.getElementById(id);
+  if(el) el.classList.toggle("hidden",!!hidden);
+}
+
 document.addEventListener("DOMContentLoaded",async()=>{
   const btn=document.getElementById("loginButton");
   if(btn) btn.addEventListener("click",login);
