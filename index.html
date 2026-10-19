@@ -30,6 +30,18 @@ button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!impo
 .overlay{display:none}.overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:25}
 @media(max-width:800px){.sidebar{position:fixed;top:64px;bottom:0;left:0;z-index:30;transform:translateX(-105%);transition:.2s;box-shadow:5px 0 20px rgba(0,0,0,.12)}.sidebar.open{transform:translateX(0)}.grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:500px){.grid{grid-template-columns:1fr}.container{padding:15px}.topbar{padding:0 10px}.user-area #userName{display:none}.logout{padding:7px 9px}}
+
+.settings-actions{margin-top:16px}
+.settings-btn{display:block;width:100%;text-align:left;border:1px solid #e5e7eb;background:#fff;padding:13px 14px;border-radius:10px;margin-top:10px;font-weight:700;cursor:pointer}
+.settings-btn:hover{background:#f8fafc}
+.dashboard-metrics{grid-template-columns:repeat(4,1fr)}
+.quick-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.quick-btn{border:0;border-radius:10px;padding:11px 16px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
+.modal-card{max-height:90vh;overflow:auto}
+@media(max-width:1100px){.dashboard-metrics{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.dashboard-metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.dashboard-metrics{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -69,20 +81,58 @@ button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!impo
 
 <main class="main"><div class="container">
 <div id="dashboardPage">
-<div class="company"><h1 id="companyName">Dashboard</h1><div class="muted">Logged in as <strong id="roleName"></strong></div></div>
-<div class="grid">
-<div class="card"><div class="card-title">Fiber Points</div><div id="pointCount" class="number">0</div></div>
-<div class="card"><div class="card-title">Fiber Boxes</div><div id="boxCount" class="number">0</div></div>
-<div class="card"><div class="card-title">Fiber Lines</div><div id="lineCount" class="number">0</div></div>
-<div class="card"><div class="card-title">Role</div><div id="dashboardRole" class="number" style="font-size:22px">-</div></div>
-</div>
+  <div class="company">
+    <h1 id="companyName">Dashboard</h1>
+    <div class="muted">Logged in as <strong id="roleName"></strong></div>
+  </div>
+
+  <div class="grid dashboard-metrics">
+    <div class="card"><div class="card-title">Total Points</div><div id="metricTotal" class="number">0</div></div>
+    <div class="card"><div class="card-title">Fiber Drop</div><div id="metricDrop" class="number">0</div></div>
+    <div class="card"><div class="card-title">Fiber Box</div><div id="metricBox" class="number">0</div></div>
+    <div class="card"><div class="card-title">Splitter</div><div id="metricSplitter" class="number">0</div></div>
+    <div class="card"><div class="card-title">Main Splitter</div><div id="metricMainSplitter" class="number">0</div></div>
+    <div class="card"><div class="card-title">Sub Splitter</div><div id="metricSubSplitter" class="number">0</div></div>
+    <div class="card"><div class="card-title">Main PON</div><div id="metricMainPon" class="number">0</div></div>
+    <div class="card"><div class="card-title">OLT</div><div id="metricOlt" class="number">0</div></div>
+    <div class="card"><div class="card-title">Problem</div><div id="metricProblem" class="number">0</div></div>
+    <div class="card"><div class="card-title">Other</div><div id="metricOther" class="number">0</div></div>
+    <div class="card"><div class="card-title">Fiber KM</div><div id="metricKm" class="number">0.00</div></div>
+  </div>
+
+  <div class="quick-actions">
+    <button class="quick-btn" onclick="openPointModal()">＋ Add Point</button>
+    <button class="quick-btn" onclick="openLineModal()">〰 Draw Fiber</button>
+    <button class="quick-btn" onclick="refreshData()">↻ Refresh</button>
+  </div>
 </div>
 
 <div id="pointsPage" class="hidden"><div class="section-head"><h2>Point List</h2><button class="add-btn" onclick="openPointModal()">+ Add Point</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Fiber Code</th><th>Cores</th><th>Status</th></tr></thead><tbody id="pointsTable"></tbody></table></div></div>
 
 <div id="linesPage" class="hidden"><div class="section-head"><h2>Fiber Line List</h2><button class="add-btn" onclick="openLineModal()">+ Draw Fiber Line</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Fiber Code</th><th>Cores</th><th>Length</th><th>Status</th></tr></thead><tbody id="linesTable"></tbody></table></div></div>
 
-<div id="settingsPage" class="hidden"><div class="panel"><h2>⚙️ Settings</h2><div class="info-row"><span>Company</span><strong id="settingsCompany">-</strong></div><div class="info-row"><span>Username</span><strong id="settingsUsername">-</strong></div><div class="info-row"><span>Role</span><strong id="settingsRole">-</strong></div><div class="info-row"><span>Email</span><strong id="settingsEmail">-</strong></div></div></div>
+<div id="settingsPage" class="hidden">
+  <div class="panel">
+    <h2>⚙️ Settings</h2>
+    <div class="info-row"><span>Company</span><strong id="settingsCompany">-</strong></div>
+    <div class="info-row"><span>Username</span><strong id="settingsUsername">-</strong></div>
+    <div class="info-row"><span>Role</span><strong id="settingsRole">-</strong></div>
+    <div class="info-row"><span>Email</span><strong id="settingsEmail">-</strong></div>
+  </div>
+
+  <div id="accountSettings" class="panel settings-actions">
+    <h3>🔐 Account Settings</h3>
+    <button class="settings-btn" onclick="openUsernameModal()">✏️ Change Username</button>
+    <button class="settings-btn" onclick="openPasswordModal()">🔒 Change Password</button>
+  </div>
+
+  <div id="adminAccountSettings" class="panel settings-actions hidden">
+    <h3>👥 Account Management</h3>
+    <p class="muted">Main Admin can create Staff and Sub Admin accounts for this company.</p>
+    <button class="settings-btn" onclick="openCreateAccountModal('staff')">👷 New Staff Account</button>
+    <button class="settings-btn" onclick="openCreateAccountModal('sub_admin')">👤 New Sub Admin Account</button>
+  </div>
+</div>
 
 <div id="staffPage" class="hidden"><div class="panel"><h2>👷 Staff Panel</h2><p class="muted">Staff workspace. Use Point and Fiber Line tools from the menu to manage network data.</p></div></div>
 
@@ -102,6 +152,37 @@ button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!impo
 <div class="field"><label>Total Cores</label><input id="lineCores" type="number" min="0" value="0"></div>
 <div class="field"><label>Length (meters)</label><input id="lineLength" type="number" min="0" value="0"></div>
 <div class="modal-actions"><button class="cancel" onclick="closeLineModal()">Cancel</button><button class="save" onclick="saveLine()">Save</button></div></div></div>
+
+
+<div id="usernameModal" class="modal hidden">
+  <div class="modal-card">
+    <h2>✏️ Change Username</h2>
+    <div class="field"><label>New Username</label><input id="newUsername" type="text" placeholder="New username"></div>
+    <div class="modal-actions"><button onclick="closeUsernameModal()">Cancel</button><button class="save" onclick="changeUsername()">Save</button></div>
+  </div>
+</div>
+
+<div id="passwordModal" class="modal hidden">
+  <div class="modal-card">
+    <h2>🔒 Change Password</h2>
+    <div class="field"><label>New Password</label><input id="newPassword" type="password" placeholder="New password"></div>
+    <div class="field"><label>Confirm Password</label><input id="confirmPassword" type="password" placeholder="Confirm password"></div>
+    <div class="modal-actions"><button onclick="closePasswordModal()">Cancel</button><button class="save" onclick="changePassword()">Save</button></div>
+  </div>
+</div>
+
+<div id="createAccountModal" class="modal hidden">
+  <div class="modal-card">
+    <h2 id="createAccountTitle">👷 New Account</h2>
+    <div class="field"><label>Full Name</label><input id="newAccountName" type="text" placeholder="Full name"></div>
+    <div class="field"><label>Username</label><input id="newAccountUsername" type="text" placeholder="Username"></div>
+    <div class="field"><label>Email</label><input id="newAccountEmail" type="email" placeholder="Email"></div>
+    <div class="field"><label>Password</label><input id="newAccountPassword" type="password" placeholder="Password"></div>
+    <div class="field"><label>Confirm Password</label><input id="newAccountPassword2" type="password" placeholder="Confirm password"></div>
+    <div id="createAccountError" class="error hidden"></div>
+    <div class="modal-actions"><button onclick="closeCreateAccountModal()">Cancel</button><button class="save" onclick="createAccount()">Create Account</button></div>
+  </div>
+</div>
 
 <div id="toast" class="toast hidden"></div>
 
@@ -141,6 +222,7 @@ async function loadUser(user){
  document.getElementById("adminRole").textContent=profile.role||"Staff";
  const role=(profile.role||"staff").toLowerCase();
  document.getElementById("adminMenu").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
+  document.getElementById("adminAccountSettings").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
  document.getElementById("staffMenu").classList.toggle("hidden",role==="admin"||role==="owner"||role==="super_admin");
  document.getElementById("loginPage").classList.add("hidden");document.getElementById("app").classList.remove("hidden");
  await loadDashboard();
@@ -153,6 +235,7 @@ async function loadDashboard(){
  const l=await client.from("fiber_lines").select("*").eq("company_id",cid).order("created_at",{ascending:false});
  if(p.error)console.error("Fiber points:",p.error);if(b.error)console.error("Fiber boxes:",b.error);if(l.error)console.error("Fiber lines:",l.error);
  pointsCache=p.data||[];linesCache=l.data||[];
+  updateDashboardMetrics(pointsCache,b.data||[],linesCache);
  document.getElementById("pointCount").textContent=pointsCache.length;
  document.getElementById("boxCount").textContent=(b.data||[]).length;
  document.getElementById("lineCount").textContent=linesCache.length;
@@ -170,6 +253,100 @@ function openPointModal(){document.getElementById("pointModal").classList.remove
 function closePointModal(){document.getElementById("pointModal").classList.add("hidden")}
 function openLineModal(){document.getElementById("lineModal").classList.remove("hidden")}
 function closeLineModal(){document.getElementById("lineModal").classList.add("hidden")}
+
+function roleIsMainAdmin(){
+  const role=(currentProfile?.role||"").toLowerCase();
+  return ["admin","owner","super_admin"].includes(role);
+}
+
+function setMetric(id,value){
+  const el=document.getElementById(id);
+  if(el) el.textContent=value;
+}
+
+function updateDashboardMetrics(points,boxes,lines){
+  const list=Array.isArray(points)?points:[];
+  const norm=v=>String(v||"").trim().toLowerCase();
+  const countType=(...types)=>list.filter(x=>types.includes(norm(x.point_type))).length;
+
+  setMetric("metricTotal",list.length);
+  setMetric("metricDrop",countType("fiber drop","drop","fiber_drop"));
+  setMetric("metricBox",(boxes||[]).length);
+  setMetric("metricSplitter",countType("splitter"));
+  setMetric("metricMainSplitter",countType("main splitter","main_splitter"));
+  setMetric("metricSubSplitter",countType("sub splitter","sub_splitter"));
+  setMetric("metricMainPon",countType("main pon","main_pon","pon"));
+  setMetric("metricOlt",countType("olt"));
+  setMetric("metricProblem",countType("problem","problem point","fault"));
+  setMetric("metricOther",countType("other"));
+
+  const meters=(lines||[]).reduce((sum,x)=>sum+Number(x.length_meters||0),0);
+  setMetric("metricKm",(meters/1000).toFixed(2));
+}
+
+function openUsernameModal(){document.getElementById("newUsername").value=currentProfile?.username||"";document.getElementById("usernameModal").classList.remove("hidden")}
+function closeUsernameModal(){document.getElementById("usernameModal").classList.add("hidden")}
+function openPasswordModal(){document.getElementById("newPassword").value="";document.getElementById("confirmPassword").value="";document.getElementById("passwordModal").classList.remove("hidden")}
+function closePasswordModal(){document.getElementById("passwordModal").classList.add("hidden")}
+
+async function changeUsername(){
+  if(!currentUser||!currentProfile)return;
+  const username=document.getElementById("newUsername").value.trim();
+  if(username.length<3){toast("Username must be at least 3 characters");return}
+  const {error}=await client.from("profiles").update({username}).eq("id",currentUser.id);
+  if(error){toast(error.message);return}
+  currentProfile.username=username;
+  document.getElementById("settingsUsername").textContent=username;
+  toast("Username changed successfully");
+  closeUsernameModal();
+}
+
+async function changePassword(){
+  const p=document.getElementById("newPassword").value;
+  const p2=document.getElementById("confirmPassword").value;
+  if(p.length<6){toast("Password must be at least 6 characters");return}
+  if(p!==p2){toast("Passwords do not match");return}
+  const {error}=await client.auth.updateUser({password:p});
+  if(error){toast(error.message);return}
+  toast("Password changed successfully");
+  closePasswordModal();
+}
+
+let creatingRole="staff";
+function openCreateAccountModal(role){
+  if(!roleIsMainAdmin()){toast("Only Main Admin can create accounts");return}
+  creatingRole=role;
+  document.getElementById("createAccountTitle").textContent=role==="sub_admin"?"👤 New Sub Admin Account":"👷 New Staff Account";
+  ["newAccountName","newAccountUsername","newAccountEmail","newAccountPassword","newAccountPassword2"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("createAccountError").classList.add("hidden");
+  document.getElementById("createAccountModal").classList.remove("hidden");
+}
+function closeCreateAccountModal(){document.getElementById("createAccountModal").classList.add("hidden")}
+
+async function createAccount(){
+  if(!roleIsMainAdmin()){toast("Only Main Admin can create accounts");return}
+  const name=document.getElementById("newAccountName").value.trim();
+  const username=document.getElementById("newAccountUsername").value.trim();
+  const email=document.getElementById("newAccountEmail").value.trim();
+  const password=document.getElementById("newAccountPassword").value;
+  const password2=document.getElementById("newAccountPassword2").value;
+  const err=document.getElementById("createAccountError");
+  err.classList.add("hidden");
+
+  if(!name||!username||!email||!password){err.textContent="All fields are required.";err.classList.remove("hidden");return}
+  if(password.length<6){err.textContent="Password must be at least 6 characters.";err.classList.remove("hidden");return}
+  if(password!==password2){err.textContent="Passwords do not match.";err.classList.remove("hidden");return}
+
+  /*
+   * IMPORTANT:
+   * Supabase Auth user creation must be done by a trusted backend/Edge Function
+   * if the current admin must remain logged in. The browser cannot safely create
+   * another Auth user with the normal signUp flow without changing sessions.
+   */
+  err.textContent="Account creation needs a Supabase Admin/Edge Function. The form is ready, but the Auth account should be created server-side.";
+  err.classList.remove("hidden");
+}
+
 async function savePoint(){
  if(!currentUser||!currentProfile){alert("Please login again.");return}
  const name=document.getElementById("pointName").value.trim(),type=document.getElementById("pointType").value,code=document.getElementById("pointCode").value.trim(),cores=Math.max(0,Number(document.getElementById("pointCores").value||0));
