@@ -236,14 +236,14 @@ async function loadUser(user){
  currentProfile=profile;currentCompany=null;
  if(profile.company_id){const {data:company,error:ce}=await client.from("companies").select("id,name,code").eq("id",profile.company_id).maybeSingle();if(ce){alert("Company error:\n\n"+ce.message);return}currentCompany=company}
  const displayName=profile.full_name||profile.username||user.email;
- document.getElementById("userName").textContent=displayName;
- document.getElementById("roleName").textContent=profile.role||"Staff";
- document.getElementById("dashboardRole").textContent=(profile.role||"Staff").toUpperCase();
- document.getElementById("companyName").textContent=currentCompany?.name||"No Company";
- document.getElementById("settingsCompany").textContent=currentCompany?.name||"No Company";
- document.getElementById("settingsUsername").textContent=profile.username||"-";
- document.getElementById("settingsRole").textContent=profile.role||"Staff";
- document.getElementById("settingsEmail").textContent=user.email||"-";
+ setText("userName",displayName);
+ setText("roleName",profile.role||"Staff");
+ setText("dashboardRole",(profile.role||"Staff").toUpperCase());
+ setText("companyName",currentCompany?.name||"No Company");
+ setText("settingsCompany",currentCompany?.name||"No Company");
+ setText("settingsUsername",profile.username||"-");
+ setText("settingsRole",profile.role||"Staff");
+ setText("settingsEmail",user.email||"-");
  const role=(profile.role||"staff").toLowerCase();
  document.getElementById("adminMenu").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
   document.getElementById("adminAccountSettings").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
@@ -260,9 +260,9 @@ async function loadDashboard(){
  if(p.error)console.error("Fiber points:",p.error);if(b.error)console.error("Fiber boxes:",b.error);if(l.error)console.error("Fiber lines:",l.error);
  pointsCache=p.data||[];linesCache=l.data||[];
   updateDashboardMetrics(pointsCache,b.data||[],linesCache);
- document.getElementById("pointCount").textContent=pointsCache.length;
- document.getElementById("boxCount").textContent=(b.data||[]).length;
- document.getElementById("lineCount").textContent=linesCache.length;
+ setText("pointCount",pointsCache.length);
+ setText("boxCount",(b.data||[]).length);
+ setText("lineCount",linesCache.length);
  renderPoints(pointsCache);renderLines(linesCache);
 }
 function renderPoints(points){
@@ -320,7 +320,7 @@ async function changeUsername(){
   const {error}=await client.from("profiles").update({username}).eq("id",currentUser.id);
   if(error){toast(error.message);return}
   currentProfile.username=username;
-  document.getElementById("settingsUsername").textContent=username;
+  setText("settingsUsername",username);
   toast("Username changed successfully");
   closeUsernameModal();
 }
@@ -340,7 +340,7 @@ let creatingRole="staff";
 function openCreateAccountModal(role){
   if(!roleIsMainAdmin()){toast("Only Main Admin can create accounts");return}
   creatingRole=role;
-  document.getElementById("createAccountTitle").textContent=role==="sub_admin"?"👤 New Sub Admin Account":"👷 New Staff Account";
+  setText("createAccountTitle",role==="sub_admin"?"👤 New Sub Admin Account":"👷 New Staff Account");
   ["newAccountName","newAccountUsername","newAccountEmail","newAccountPassword","newAccountPassword2"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("createAccountError").classList.add("hidden");
   document.getElementById("createAccountModal").classList.remove("hidden");
@@ -407,4 +407,4 @@ function showLogin(){document.getElementById("app").classList.add("hidden");docu
 function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 </script>
 </body>
-                                                </html>
+</html>
