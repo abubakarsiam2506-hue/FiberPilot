@@ -42,7 +42,7 @@ button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!impo
 @media(max-width:800px){.dashboard-metrics{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:500px){.dashboard-metrics{grid-template-columns:1fr}}
 
-</style>
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}\n</style>
 </head>
 <body>
 
@@ -83,13 +83,13 @@ button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!impo
 <div id="dashboardPage">
   <div class="company">
     <h1 id="companyName">Dashboard</h1>
-    <div class="muted">Logged in as <strong id="roleName"></strong></div>
+    <div class="muted">Logged in as <strong id="roleName"></strong><span id="dashboardRole" class="sr-only">Staff</span></div>
   </div>
 
   <div class="grid dashboard-metrics">
-    <div class="card"><div class="card-title">Total Points</div><div id="metricTotal" class="number">0</div></div>
+    <div class="card"><div class="card-title">Total Points</div><div id="metricTotal" class="number">0</div><span id="pointCount" class="sr-only">0</span></div>
     <div class="card"><div class="card-title">Fiber Drop</div><div id="metricDrop" class="number">0</div></div>
-    <div class="card"><div class="card-title">Fiber Box</div><div id="metricBox" class="number">0</div></div>
+    <div class="card"><div class="card-title">Fiber Box</div><div id="metricBox" class="number">0</div><span id="boxCount" class="sr-only">0</span></div>
     <div class="card"><div class="card-title">Splitter</div><div id="metricSplitter" class="number">0</div></div>
     <div class="card"><div class="card-title">Main Splitter</div><div id="metricMainSplitter" class="number">0</div></div>
     <div class="card"><div class="card-title">Sub Splitter</div><div id="metricSubSplitter" class="number">0</div></div>
@@ -97,7 +97,7 @@ button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!impo
     <div class="card"><div class="card-title">OLT</div><div id="metricOlt" class="number">0</div></div>
     <div class="card"><div class="card-title">Problem</div><div id="metricProblem" class="number">0</div></div>
     <div class="card"><div class="card-title">Other</div><div id="metricOther" class="number">0</div></div>
-    <div class="card"><div class="card-title">Fiber KM</div><div id="metricKm" class="number">0.00</div></div>
+    <div class="card"><div class="card-title">Fiber KM</div><div id="metricKm" class="number">0.00</div><span id="lineCount" class="sr-only">0</span></div>
   </div>
 
   <div class="quick-actions">
@@ -407,4 +407,4 @@ function showLogin(){document.getElementById("app").classList.add("hidden");docu
 function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 </script>
 </body>
-</html>
+                                                </html>
