@@ -1,318 +1,1025 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FiberPilot | Network Management</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiberPilot</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172033}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer;border:0;border-radius:8px;padding:11px 14px;background:#087f8c;color:white;font-weight:bold}
-input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0 14px;background:white}
-label{font-size:13px;font-weight:bold}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7fb;
+  color:#172033;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+
 .hidden{display:none!important}
-.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(140deg,#10243b,#087f8c)}
-.login-box{background:white;border-radius:18px;padding:25px;width:100%;max-width:420px;box-shadow:0 20px 50px #0003}
-.login-box h1{margin-top:0;color:#087f8c}
-.login-box p{color:#64748b;font-size:14px;line-height:1.6}
-header{background:#10243b;color:white;padding:18px}
-header h2{margin:0}
-header p{color:#bdd5e9;font-size:13px;margin-bottom:0}
-.layout{display:flex;min-height:calc(100vh - 75px)}
-.sidebar{background:#142b43;width:225px;flex-shrink:0;padding:14px}
-.sidebar button{display:block;width:100%;text-align:left;margin:5px 0;background:transparent;color:#e2e8f0}
-.sidebar button.active,.sidebar button:hover{background:#087f8c;color:white}
-.sidebar .logout{background:#7f2935;margin-top:25px}
-main{padding:18px;width:100%;min-width:0}
-.page{display:none}
-.page.active{display:block}
-.heading{font-size:22px;margin:5px 0 18px}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{background:white;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 2px 9px #0000000a}
-.stat-label{font-size:13px;color:#64748b}
-.stat-value{font-size:26px;font-weight:bold;color:#087f8c;margin-top:8px}
-.grid{display:grid;grid-template-columns:1fr;gap:12px}
-#map{height:380px;border-radius:10px;z-index:1}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:left;padding:10px;border-bottom:1px solid #e2e8f0;white-space:nowrap}
-th{background:#f8fafc}
-.small{padding:7px 9px;font-size:12px;margin:2px}
-.danger{background:#c93636}
-.secondary{background:#e2e8f0;color:#172033}
-.note{font-size:12px;line-height:1.6;color:#64748b}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
-.tag{background:#dbeafe;color:#1d4ed8;border-radius:20px;padding:5px 9px;font-size:12px}
-@media(min-width:800px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.grid{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){
- .layout{display:block}
- .sidebar{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
- .sidebar button{font-size:12px;padding:10px;margin:0}
- .sidebar .logout{margin-top:0}
- main{padding:12px}
- #map{height:320px}
+
+.login-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:#eef3f9;
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:white;
+  padding:32px;
+  border-radius:18px;
+  box-shadow:0 10px 35px rgba(0,0,0,.08);
+}
+
+.logo{
+  font-size:30px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.muted{color:#667085}
+
+.field{
+  margin-top:16px;
+}
+
+.field label{
+  display:block;
+  font-weight:600;
+  margin-bottom:7px;
+}
+
+.field input,.field select{
+  width:100%;
+  padding:12px;
+  border:1px solid #d7dce5;
+  border-radius:9px;
+  outline:none;
+}
+
+.primary{
+  width:100%;
+  margin-top:20px;
+  padding:13px;
+  border:0;
+  border-radius:9px;
+  background:#2563eb;
+  color:white;
+  font-weight:700;
+}
+
+.primary:hover{opacity:.92}
+
+.error{
+  margin-top:14px;
+  color:#b42318;
+  background:#fef3f2;
+  padding:10px;
+  border-radius:8px;
+}
+
+.app{
+  min-height:100vh;
+}
+
+.topbar{
+  height:64px;
+  background:#111827;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+}
+
+.brand{
+  font-size:22px;
+  font-weight:800;
+}
+
+.user-area{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logout{
+  border:1px solid #475467;
+  background:transparent;
+  color:white;
+  padding:8px 13px;
+  border-radius:8px;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:24px;
+}
+
+.company{
+  margin-bottom:22px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+
+.card{
+  background:white;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+.card-title{
+  color:#667085;
+  font-size:14px;
+}
+
+.number{
+  margin-top:8px;
+  font-size:30px;
+  font-weight:800;
+}
+
+.section{
+  margin-top:24px;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.add-btn{
+  border:0;
+  background:#2563eb;
+  color:white;
+  padding:10px 15px;
+  border-radius:8px;
+  font-weight:700;
+}
+
+.table-wrap{
+  overflow:auto;
+  background:white;
+  border-radius:14px;
+  box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+th,td{
+  padding:13px 15px;
+  text-align:left;
+  border-bottom:1px solid #eaecf0;
+}
+
+th{
+  font-size:13px;
+  color:#667085;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal-card{
+  width:100%;
+  max-width:500px;
+  background:white;
+  padding:25px;
+  border-radius:15px;
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.cancel{
+  flex:1;
+  border:1px solid #d0d5dd;
+  background:white;
+  padding:11px;
+  border-radius:8px;
+}
+
+.save{
+  flex:1;
+  border:0;
+  background:#2563eb;
+  color:white;
+  padding:11px;
+  border-radius:8px;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#ecfdf3;
+  color:#027a48;
+  font-size:12px;
+  font-weight:700;
+}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:500px){
+  .grid{grid-template-columns:1fr}
+  .container{padding:15px}
+  .topbar{padding:0 14px}
 }
 </style>
 </head>
+
 <body>
 
-<section id="loginPage" class="login-page">
- <div class="login-box">
-  <h1>🛰️ FiberPilot</h1>
-  <p>ISP & Fiber Network Management<br>আপনার কোম্পানির নেটওয়ার্ক এক জায়গায় পরিচালনা করুন।</p>
-  <form id="loginForm">
-   <label>Company Name / কোম্পানি</label>
-   <input id="company" required placeholder="আপনার কোম্পানির নাম">
-   <label>আপনার নাম</label>
-   <input id="username" required placeholder="Admin বা Staff নাম">
-   <label>Role / পদবি</label>
-   <select id="role"><option value="admin">Admin</option><option value="staff">Staff / Viewer</option></select>
-   <label>Demo Access Code</label>
-   <input id="demoCode" type="password" placeholder="ডেমোতে যেকোনো কোড">
-   <button style="width:100%" type="submit">Login / প্রবেশ করুন</button>
-  </form>
-  <p>Demo preview: এই লগইন এখনো প্রকৃত পরিচয় যাচাই করে না। প্রকাশিত ওয়েবসাইটে ব্যবহারের আগে Supabase Authentication সেটআপ করতে হবে।</p>
- </div>
-</section>
+<!-- LOGIN -->
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <div class="logo">FiberPilot</div>
+    <div class="muted">Fiber Network Management</div>
 
-<div id="app" class="hidden">
- <header>
-  <div class="topbar" style="margin:0">
-   <div><h2>🛰️ FiberPilot</h2><p>ISP & Fiber Network Management</p></div>
-   <span class="tag" id="roleBadge">Admin</span>
+    <div class="field">
+      <label>Email</label>
+      <input id="email" type="email" placeholder="admin@example.com">
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input id="password" type="password" placeholder="Password">
+    </div>
+
+    <button class="primary" onclick="login()">Login</button>
+
+    <div id="loginError" class="error hidden"></div>
   </div>
- </header>
- <div class="layout">
-  <aside class="sidebar">
-   <button class="active" data-page="dashboard">📊 Dashboard</button>
-   <button data-page="mapPage">🗺️ Map</button>
-   <button data-page="staffPage" class="admin-only">👥 Staff Management</button>
-   <button data-page="pointsPage">📍 Fiber Points</button>
-   <button data-page="linesPage">🔗 Fiber Lines</button>
-   <button id="logoutBtn" class="logout">↪ Logout</button>
-  </aside>
-
-  <main>
-   <section id="dashboard" class="page active">
-    <h2 class="heading">Dashboard</h2>
-    <div class="stats">
-     <div class="card"><div class="stat-label">Fiber Points</div><div class="stat-value" id="statPoints">0</div></div>
-     <div class="card"><div class="stat-label">Fiber Lines</div><div class="stat-value" id="statLines">0</div></div>
-     <div class="card"><div class="stat-label">Fiber Boxes</div><div class="stat-value" id="statBoxes">0</div></div>
-     <div class="card"><div class="stat-label">Available Cores</div><div class="stat-value" id="statCores">0</div></div>
-    </div>
-    <div class="card"><h3>Company Information</h3><p>Company: <b id="companyDisplay"></b></p><p>Logged in as: <b id="userDisplay"></b></p><p>Role: <b id="roleDisplay"></b></p></div>
-    <div class="card"><h3>Network Summary</h3><p id="summary">এখনো কোনো নেটওয়ার্ক তথ্য যোগ করা হয়নি।</p></div>
-   </section>
-
-   <section id="mapPage" class="page">
-    <h2 class="heading">🗺️ Network Map</h2>
-    <div class="card"><p class="note">ম্যাপে চাপ দিলে অক্ষাংশ ও দ্রাঘিমাংশ Fiber Points ফর্মে বসবে। ম্যাপের জন্য ইন্টারনেট প্রয়োজন।</p><div id="map"></div></div>
-   </section>
-
-   <section id="staffPage" class="page">
-    <h2 class="heading">👥 Staff Management</h2>
-    <div class="card">
-     <form id="staffForm">
-      <label>Staff Name</label><input id="staffName" required placeholder="কর্মীর নাম">
-      <label>Staff Email / Username</label><input id="staffEmail" required placeholder="কর্মীর ইমেইল বা ইউজারনেম">
-      <label>Role</label><select id="staffRole"><option value="staff">Staff - Viewer</option><option value="admin">Admin</option></select>
-      <button type="submit">Add Staff</button>
-     </form>
-     <p class="note">এটি ডেমো তালিকা। প্রকৃত কর্মী অ্যাকাউন্ট তৈরির জন্য Supabase Authentication প্রয়োজন।</p>
-    </div>
-    <div class="card table-wrap"><table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Action</th></tr></thead><tbody id="staffRows"></tbody></table></div>
-   </section>
-
-   <section id="pointsPage" class="page">
-    <h2 class="heading">📍 Fiber Points</h2>
-    <div class="card">
-     <form id="pointForm">
-      <label>Point Name *</label><input id="pointName" required placeholder="যেমন Box-01">
-      <label>Point Type</label><select id="pointType"><option>Fiber Box</option><option>Fiber Drop / End</option><option>Splitter</option><option>OLT / Main Point</option><option>Speed Location</option><option>Other</option></select>
-      <label>Fiber Code</label><input id="pointCode" placeholder="FBR-001">
-      <label>Latitude *</label><input id="pointLat" type="number" step="any" required>
-      <label>Longitude *</label><input id="pointLng" type="number" step="any" required>
-      <label>Total Cores</label><input id="pointTotal" type="number" min="0" step="1" value="0">
-      <label>Used Cores</label><input id="pointUsed" type="number" min="0" step="1" value="0">
-      <label>Notes</label><textarea id="pointNotes" rows="2"></textarea>
-      <button type="submit">Save Fiber Point</button>
-     </form>
-    </div>
-    <div class="card">
-     <input id="pointSearch" placeholder="পয়েন্টের নাম বা কোড খুঁজুন">
-     <div class="table-wrap"><table><thead><tr><th>Name / Code</th><th>Type</th><th>Cores</th><th>Action</th></tr></thead><tbody id="pointRows"></tbody></table></div>
-    </div>
-   </section>
-
-   <section id="linesPage" class="page">
-    <h2 class="heading">🔗 Fiber Lines</h2>
-    <div class="card">
-     <form id="lineForm">
-      <label>Line Name *</label><input id="lineName" required placeholder="Main Line A">
-      <label>Fiber Code</label><input id="lineCode" placeholder="LINE-001">
-      <label>Start Point</label><select id="lineStart" required></select>
-      <label>End Point</label><select id="lineEnd" required></select>
-      <label>Fiber Length (meters)</label><input id="lineLength" type="number" min="0" step="0.1" value="0">
-      <label>Total Cores</label><input id="lineTotal" type="number" min="0" step="1" value="0">
-      <label>Used Cores</label><input id="lineUsed" type="number" min="0" step="1" value="0">
-      <label>Notes</label><textarea id="lineNotes" rows="2"></textarea>
-      <button type="submit">Save Fiber Line</button>
-     </form>
-    </div>
-    <div class="card">
-     <div class="table-wrap"><table><thead><tr><th>Line</th><th>Route</th><th>Length</th><th>Cores Free/Total</th><th>Action</th></tr></thead><tbody id="lineRows"></tbody></table></div>
-    </div>
-   </section>
-  </main>
- </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- APP -->
+<div id="app" class="app hidden">
+
+  <div class="topbar">
+    <div class="brand">FiberPilot</div>
+
+    <div class="user-area">
+      <span id="userName"></span>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="company">
+      <h1 id="companyName">Dashboard</h1>
+      <div class="muted">
+        Logged in as <strong id="roleName"></strong>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-title">Fiber Points</div>
+        <div id="pointCount" class="number">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Fiber Boxes</div>
+        <div id="boxCount" class="number">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Fiber Lines</div>
+        <div id="lineCount" class="number">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Role</div>
+        <div id="dashboardRole" class="number" style="font-size:22px">-</div>
+      </div>
+
+    </div>
+
+
+    <!-- FIBER POINTS -->
+    <div class="section">
+
+      <div class="section-head">
+        <h2>Fiber Points</h2>
+        <button class="add-btn" onclick="openPointModal()">+ Add Point</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Fiber Code</th>
+              <th>Cores</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="pointsTable"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+
+    <!-- FIBER LINES -->
+    <div class="section">
+
+      <div class="section-head">
+        <h2>Fiber Lines</h2>
+        <button class="add-btn" onclick="openLineModal()">+ Add Line</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Fiber Code</th>
+              <th>Cores</th>
+              <th>Length</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="linesTable"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- POINT MODAL -->
+<div id="pointModal" class="modal hidden">
+  <div class="modal-card">
+
+    <h2>Add Fiber Point</h2>
+
+    <div class="field">
+      <label>Name</label>
+      <input id="pointName" placeholder="Example: Box 01">
+    </div>
+
+    <div class="field">
+      <label>Type</label>
+      <select id="pointType">
+        <option>Fiber Box</option>
+        <option>OLT</option>
+        <option>POP</option>
+        <option>Joint</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Fiber Code</label>
+      <input id="pointCode" placeholder="FB-001">
+    </div>
+
+    <div class="field">
+      <label>Total Cores</label>
+      <input id="pointCores" type="number" value="0">
+    </div>
+
+    <div class="modal-actions">
+      <button class="cancel" onclick="closePointModal()">Cancel</button>
+      <button class="save" onclick="savePoint()">Save</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- LINE MODAL -->
+<div id="lineModal" class="modal hidden">
+  <div class="modal-card">
+
+    <h2>Add Fiber Line</h2>
+
+    <div class="field">
+      <label>Name</label>
+      <input id="lineName" placeholder="Example: Main Line 01">
+    </div>
+
+    <div class="field">
+      <label>Fiber Code</label>
+      <input id="lineCode" placeholder="FL-001">
+    </div>
+
+    <div class="field">
+      <label>Total Cores</label>
+      <input id="lineCores" type="number" value="0">
+    </div>
+
+    <div class="field">
+      <label>Length (meters)</label>
+      <input id="lineLength" type="number" value="0">
+    </div>
+
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeLineModal()">Cancel</button>
+      <button class="save" onclick="saveLine()">Save</button>
+    </div>
+
+  </div>
+</div>
+
+
 <script>
-(function(){
- const $=id=>document.getElementById(id);
- let company="",username="",role="staff",map=null;
- let points=[],lines=[],staff=[];
- let markers=[];
- const key=()=> "fiberpilot_demo_"+company.trim().toLowerCase();
- const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- function load(){
-  try{
-   const d=JSON.parse(localStorage.getItem(key())||"{}");
-   points=Array.isArray(d.points)?d.points:[];
-   lines=Array.isArray(d.lines)?d.lines:[];
-   staff=Array.isArray(d.staff)?d.staff:[];
-  }catch(e){points=[];lines=[];staff=[]}
- }
- function save(){
-  try{localStorage.setItem(key(),JSON.stringify({points,lines,staff}));return true}
-  catch(e){alert("সেভ করা যায়নি। ব্রাউজারের স্টোরেজ পরীক্ষা করুন।");return false}
- }
- function canEdit(){return role==="admin"}
- function setupMap(){
-  if(map){setTimeout(()=>map.invalidateSize(),150);return}
-  if(typeof L==="undefined"){
-   $("map").innerHTML="ম্যাপ লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করুন।";return
+/* ==========================================
+   SUPABASE CONFIG
+========================================== */
+
+const SUPABASE_URL =
+  "https://traojcygtyfsgieqqvel.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT";
+
+const client = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+/* ==========================================
+   GLOBAL DATA
+========================================== */
+
+let currentUser = null;
+let currentProfile = null;
+
+
+/* ==========================================
+   START APP
+========================================== */
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const {
+    data: { session }
+  } = await client.auth.getSession();
+
+  if (session) {
+    await loadUser(session.user);
+  } else {
+    showLogin();
   }
-  map=L.map("map").setView([23.8103,90.4125],12);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap"}).addTo(map);
-  map.on("click",e=>{
-   $("pointLat").value=e.latlng.lat.toFixed(7);
-   $("pointLng").value=e.latlng.lng.toFixed(7);
-   showPage("pointsPage");
+
+});
+
+
+/* ==========================================
+   LOGIN
+========================================== */
+
+async function login() {
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const errorBox =
+    document.getElementById("loginError");
+
+  errorBox.classList.add("hidden");
+
+  if (!email || !password) {
+    errorBox.textContent =
+      "Email and password are required.";
+    errorBox.classList.remove("hidden");
+    return;
+  }
+
+  const {
+    data,
+    error
+  } = await client.auth.signInWithPassword({
+    email,
+    password
   });
-  renderMarkers();
- }
- function renderMarkers(){
-  if(!map)return;
-  markers.forEach(m=>map.removeLayer(m));markers=[];
-  points.forEach(p=>{
-   const m=L.marker([p.lat,p.lng]).addTo(map);
-   m.bindPopup("<b>"+esc(p.name)+"</b><br>"+esc(p.type)+"<br>Code: "+esc(p.code||"-"));
-   markers.push(m);
-  });
-  lines.forEach(l=>{
-   const a=points.find(p=>p.id===l.start),b=points.find(p=>p.id===l.end);
-   if(a&&b){
-    const m=L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color:"#087f8c",weight:4}).addTo(map);
-    m.bindPopup(esc(l.name)+" · "+Number(l.length||0)+" m");markers.push(m);
-   }
-  });
- }
- function render(){
-  $("statPoints").textContent=points.length;
-  $("statLines").textContent=lines.length;
-  $("statBoxes").textContent=points.filter(p=>p.type==="Fiber Box").length;
-  $("statCores").textContent=lines.reduce((n,l)=>n+Math.max(0,Number(l.total||0)-Number(l.used||0)),0);
-  $("summary").textContent="মোট "+points.length+"টি পয়েন্ট এবং "+lines.length+"টি ফাইবার লাইন।";
-  $("pointRows").innerHTML=points.filter(p=>(p.name+" "+p.code).toLowerCase().includes($("pointSearch").value.toLowerCase())).map(p=>`<tr><td><b>${esc(p.name)}</b><br>${esc(p.code||"-")}</td><td>${esc(p.type)}</td><td>${Math.max(0,Number(p.total||0)-Number(p.used||0))}/${Number(p.total||0)}</td><td>${canEdit()?`<button class="small danger" data-del-point="${esc(p.id)}">Delete</button>`:`Viewer`}</td></tr>`).join("")||'<tr><td colspan="4">কোনো পয়েন্ট নেই।</td></tr>';
-  $("lineRows").innerHTML=lines.map(l=>{
-   const a=points.find(p=>p.id===l.start),b=points.find(p=>p.id===l.end);
-   return `<tr><td><b>${esc(l.name)}</b><br>${esc(l.code||"-")}</td><td>${esc(a?.name||"?")} → ${esc(b?.name||"?")}</td><td>${Number(l.length||0)} m</td><td>${Math.max(0,Number(l.total||0)-Number(l.used||0))}/${Number(l.total||0)}</td><td>${canEdit()?`<button class="small danger" data-del-line="${esc(l.id)}">Delete</button>`:"Viewer"}</td></tr>`;
-  }).join("")||'<tr><td colspan="5">কোনো লাইন নেই।</td></tr>';
-  $("staffRows").innerHTML=staff.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.email)}</td><td>${esc(s.role)}</td><td><button class="small danger" data-del-staff="${esc(s.id)}">Delete</button></td></tr>`).join("")||'<tr><td colspan="4">কোনো স্টাফ নেই।</td></tr>';
-  const opts=points.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
-  $("lineStart").innerHTML=opts;$("lineEnd").innerHTML=opts;
-  document.querySelectorAll(".admin-only").forEach(el=>el.classList.toggle("hidden",!canEdit()));
-  document.querySelectorAll("#pointForm input,#pointForm select,#pointForm textarea,#lineForm input,#lineForm select,#lineForm textarea,#staffForm input,#staffForm select").forEach(el=>el.disabled=!canEdit());
-  document.querySelectorAll("#pointForm button,#lineForm button,#staffForm button").forEach(el=>el.disabled=!canEdit());
-  renderMarkers();
- }
- function showPage(id){
-  if(id==="staffPage"&&!canEdit()){alert("Staff Management শুধু Admin দেখতে পারবে।");return}
-  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
-  document.querySelectorAll(".sidebar [data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
-  if(id==="mapPage"){setupMap();setTimeout(()=>map&&map.invalidateSize(),150)}
- }
- document.querySelectorAll(".sidebar [data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
- $("loginForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  company=$("company").value.trim();username=$("username").value.trim();role=$("role").value;
-  if(!company||!username)return;
-  load();
-  $("loginPage").classList.add("hidden");$("app").classList.remove("hidden");
-  $("companyDisplay").textContent=company;$("userDisplay").textContent=username;
-  $("roleDisplay").textContent=role==="admin"?"Admin":"Staff / Viewer";
-  $("roleBadge").textContent=role==="admin"?"Admin":"Staff / Viewer";
-  render();showPage("dashboard");
- });
- $("logoutBtn").addEventListener("click",()=>{
-  company="";username="";role="staff";
-  $("app").classList.add("hidden");$("loginPage").classList.remove("hidden");
-  $("demoCode").value="";
- });
- $("pointForm").addEventListener("submit",e=>{
-  e.preventDefault();if(!canEdit())return;
-  const lat=Number($("pointLat").value),lng=Number($("pointLng").value);
-  const total=Number($("pointTotal").value),used=Number($("pointUsed").value);
-  if(!Number.isFinite(lat)||lat < -90||lat>90||!Number.isFinite(lng)||lng < -180||lng>180){alert("সঠিক Latitude ও Longitude দিন।");return}
-  if(!Number.isInteger(total)||!Number.isInteger(used)||total<0||used<0||used>total){alert("কোরের সংখ্যা ঠিক করুন।");return}
-  const p={id:Date.now().toString()+Math.random().toString(36).slice(2),name:$("pointName").value.trim(),type:$("pointType").value,code:$("pointCode").value.trim(),lat,lng,total,used,notes:$("pointNotes").value};
-  if(!p.name)return;
-  points.push(p);if(!save()){points.pop();return}
-  e.target.reset();$("pointTotal").value=0;$("pointUsed").value=0;
-  render();alert("Fiber Point সেভ হয়েছে।");
- });
- $("lineForm").addEventListener("submit",e=>{
-  e.preventDefault();if(!canEdit())return;
-  const start=$("lineStart").value,end=$("lineEnd").value;
-  const total=Number($("lineTotal").value),used=Number($("lineUsed").value),length=Number($("lineLength").value);
-  if(!start||!end||start===end){alert("দুটি আলাদা Start ও End Point নির্বাচন করুন।");return}
-  if(!Number.isInteger(total)||!Number.isInteger(used)||total<0||used<0||used>total||!Number.isFinite(length)||length<0){alert("লাইন দৈর্ঘ্য ও কোরের সংখ্যা পরীক্ষা করুন।");return}
-  const l={id:Date.now().toString()+Math.random().toString(36).slice(2),name:$("lineName").value.trim(),code:$("lineCode").value.trim(),start,end,total,used,length,notes:$("lineNotes").value};
-  if(!l.name)return;
-  lines.push(l);if(!save()){lines.pop();return}
-  e.target.reset();$("lineLength").value=0;$("lineTotal").value=0;$("lineUsed").value=0;render();alert("Fiber Line সেভ হয়েছে।");
- });
- $("staffForm").addEventListener("submit",e=>{
-  e.preventDefault();if(!canEdit())return;
-  const s={id:Date.now().toString(),name:$("staffName").value.trim(),email:$("staffEmail").value.trim(),role:$("staffRole").value};
-  if(!s.name||!s.email)return;
-  staff.push(s);if(!save()){staff.pop();return}
-  e.target.reset();render();alert("ডেমো স্টাফ তালিকায় যোগ হয়েছে। প্রকৃত লগইন অ্যাকাউন্ট তৈরি হয়নি।");
- });
- $("pointSearch").addEventListener("input",render);
- document.body.addEventListener("click",e=>{
-  const p=e.target.closest("[data-del-point]");
-  const l=e.target.closest("[data-del-line]");
-  const s=e.target.closest("[data-del-staff]");
-  if(p&&canEdit()&&confirm("এই পয়েন্ট মুছবেন?")){
-   const old=points;points=points.filter(x=>x.id!==p.dataset.delPoint);
-   if(!save())points=old;else render();
+
+  if (error) {
+
+    errorBox.textContent = error.message;
+    errorBox.classList.remove("hidden");
+
+    return;
   }
-  if(l&&canEdit()&&confirm("এই লাইন মুছবেন?")){
-   const old=lines;lines=lines.filter(x=>x.id!==l.dataset.delLine);
-   if(!save())lines=old;else render();
+
+  await loadUser(data.user);
+}
+
+
+/* ==========================================
+   LOAD USER
+========================================== */
+
+async function loadUser(user) {
+
+  currentUser = user;
+
+  const {
+    data: profile,
+    error
+  } = await client
+    .from("profiles")
+    .select(`
+      id,
+      full_name,
+      username,
+      role,
+      company_id,
+      companies:company_id (
+        id,
+        name,
+        code
+      )
+    `)
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+
+    alert(
+      "Login successful, but profile could not be loaded.\n\n" +
+      error.message
+    );
+
+    return;
   }
-  if(s&&canEdit()&&confirm("এই স্টাফ রেকর্ড মুছবেন?")){
-   const old=staff;staff=staff.filter(x=>x.id!==s.dataset.delStaff);
-   if(!save())staff=old;else render();
+
+  currentProfile = profile;
+
+  document.getElementById("userName").textContent =
+    profile.full_name ||
+    profile.username ||
+    user.email;
+
+  document.getElementById("roleName").textContent =
+    profile.role;
+
+  document.getElementById("dashboardRole").textContent =
+    profile.role.toUpperCase();
+
+  document.getElementById("companyName").textContent =
+    profile.companies?.name || "No Company";
+
+  document.getElementById("loginPage")
+    .classList.add("hidden");
+
+  document.getElementById("app")
+    .classList.remove("hidden");
+
+  await loadDashboard();
+
+}
+
+
+/* ==========================================
+   DASHBOARD
+========================================== */
+
+async function loadDashboard() {
+
+  const companyId =
+    currentProfile.company_id;
+
+  if (!companyId) {
+    alert("Your account is not assigned to a company.");
+    return;
   }
- });
-})();
+
+
+  /* POINTS */
+
+  const {
+    data: points,
+    error: pointsError
+  } = await client
+    .from("fiber_points")
+    .select("*")
+    .eq("company_id", companyId)
+    .order("created_at", {
+      ascending: false
+    });
+
+  if (pointsError) {
+    console.error(pointsError);
+    return;
+  }
+
+
+  /* BOXES */
+
+  const {
+    data: boxes,
+    error: boxesError
+  } = await client
+    .from("fiber_boxes")
+    .select("id")
+    .eq("company_id", companyId);
+
+  if (boxesError) {
+    console.error(boxesError);
+  }
+
+
+  /* LINES */
+
+  const {
+    data: lines,
+    error: linesError
+  } = await client
+    .from("fiber_lines")
+    .select("*")
+    .eq("company_id", companyId)
+    .order("created_at", {
+      ascending: false
+    });
+
+  if (linesError) {
+    console.error(linesError);
+    return;
+  }
+
+
+  document.getElementById("pointCount")
+    .textContent = points?.length || 0;
+
+  document.getElementById("boxCount")
+    .textContent = boxes?.length || 0;
+
+  document.getElementById("lineCount")
+    .textContent = lines?.length || 0;
+
+
+  renderPoints(points || []);
+  renderLines(lines || []);
+
+}
+
+
+/* ==========================================
+   RENDER POINTS
+========================================== */
+
+function renderPoints(points) {
+
+  const table =
+    document.getElementById("pointsTable");
+
+  if (!points.length) {
+
+    table.innerHTML = `
+      <tr>
+        <td colspan="5" class="muted">
+          No fiber points yet.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  table.innerHTML =
+    points.map(point => `
+
+      <tr>
+
+        <td>${escapeHtml(point.name || "")}</td>
+
+        <td>${escapeHtml(point.point_type || "Fiber Box")}</td>
+
+        <td>${escapeHtml(point.fiber_code || "-")}</td>
+
+        <td>
+          ${point.used_cores || 0}/${point.total_cores || 0}
+        </td>
+
+        <td>
+          <span class="badge">
+            ${escapeHtml(point.status || "active")}
+          </span>
+        </td>
+
+      </tr>
+
+    `).join("");
+
+}
+
+
+/* ==========================================
+   RENDER LINES
+========================================== */
+
+function renderLines(lines) {
+
+  const table =
+    document.getElementById("linesTable");
+
+  if (!lines.length) {
+
+    table.innerHTML = `
+      <tr>
+        <td colspan="5" class="muted">
+          No fiber lines yet.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  table.innerHTML =
+    lines.map(line => `
+
+      <tr>
+
+        <td>${escapeHtml(line.name || "")}</td>
+
+        <td>${escapeHtml(line.fiber_code || "-")}</td>
+
+        <td>
+          ${line.used_cores || 0}/${line.total_cores || 0}
+        </td>
+
+        <td>
+          ${line.length_meters || 0} m
+        </td>
+
+        <td>
+          <span class="badge">
+            ${escapeHtml(line.status || "active")}
+          </span>
+        </td>
+
+      </tr>
+
+    `).join("");
+
+}
+
+
+/* ==========================================
+   ADD POINT
+========================================== */
+
+function openPointModal() {
+  document
+    .getElementById("pointModal")
+    .classList.remove("hidden");
+}
+
+function closePointModal() {
+  document
+    .getElementById("pointModal")
+    .classList.add("hidden");
+}
+
+
+async function savePoint() {
+
+  const name =
+    document.getElementById("pointName")
+      .value.trim();
+
+  const type =
+    document.getElementById("pointType")
+      .value;
+
+  const code =
+    document.getElementById("pointCode")
+      .value.trim();
+
+  const cores =
+    Number(
+      document.getElementById("pointCores")
+        .value || 0
+    );
+
+  if (!name) {
+    alert("Point name is required.");
+    return;
+  }
+
+  const {
+    error
+  } = await client
+    .from("fiber_points")
+    .insert({
+      company_id: currentProfile.company_id,
+      name: name,
+      point_type: type,
+      fiber_code: code || null,
+      total_cores: cores,
+      used_cores: 0,
+      status: "active",
+      created_by: currentUser.id
+    });
+
+  if (error) {
+
+    alert(error.message);
+    return;
+
+  }
+
+  document.getElementById("pointName").value = "";
+  document.getElementById("pointCode").value = "";
+  document.getElementById("pointCores").value = "0";
+
+  closePointModal();
+
+  await loadDashboard();
+
+}
+
+
+/* ==========================================
+   ADD LINE
+========================================== */
+
+function openLineModal() {
+  document
+    .getElementById("lineModal")
+    .classList.remove("hidden");
+}
+
+function closeLineModal() {
+  document
+    .getElementById("lineModal")
+    .classList.add("hidden");
+}
+
+
+async function saveLine() {
+
+  const name =
+    document.getElementById("lineName")
+      .value.trim();
+
+  const code =
+    document.getElementById("lineCode")
+      .value.trim();
+
+  const cores =
+    Number(
+      document.getElementById("lineCores")
+        .value || 0
+    );
+
+  const length =
+    Number(
+      document.getElementById("lineLength")
+        .value || 0
+    );
+
+  if (!name) {
+    alert("Line name is required.");
+    return;
+  }
+
+  const {
+    error
+  } = await client
+    .from("fiber_lines")
+    .insert({
+      company_id: currentProfile.company_id,
+      name: name,
+      fiber_code: code || null,
+      total_cores: cores,
+      used_cores: 0,
+      length_meters: length,
+      status: "active",
+      created_by: currentUser.id
+    });
+
+  if (error) {
+
+    alert(error.message);
+    return;
+
+  }
+
+  document.getElementById("lineName").value = "";
+  document.getElementById("lineCode").value = "";
+  document.getElementById("lineCores").value = "0";
+  document.getElementById("lineLength").value = "0";
+
+  closeLineModal();
+
+  await loadDashboard();
+
+}
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+async function logout() {
+
+  await client.auth.signOut();
+
+  currentUser = null;
+  currentProfile = null;
+
+  document.getElementById("app")
+    .classList.add("hidden");
+
+  document.getElementById("loginPage")
+    .classList.remove("hidden");
+
+  document.getElementById("email").value = "";
+  document.getElementById("password").value = "";
+
+}
+
+
+/* ==========================================
+   SECURITY / HTML ESCAPE
+========================================== */
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* ==========================================
+   AUTH STATE
+========================================== */
+
+client.auth.onAuthStateChange(
+  async (event, session) => {
+
+    if (event === "SIGNED_OUT") {
+      showLogin();
+    }
+
+  }
+);
+
+
+function showLogin() {
+
+  document.getElementById("app")
+    .classList.add("hidden");
+
+  document.getElementById("loginPage")
+    .classList.remove("hidden");
+
+}
 </script>
+
 </body>
-  </html>
+</html>
