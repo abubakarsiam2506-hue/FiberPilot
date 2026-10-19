@@ -218,8 +218,6 @@ async function loadUser(user){
  document.getElementById("settingsUsername").textContent=profile.username||"-";
  document.getElementById("settingsRole").textContent=profile.role||"Staff";
  document.getElementById("settingsEmail").textContent=user.email||"-";
- document.getElementById("adminCompany").textContent=currentCompany?.name||"-";
- document.getElementById("adminRole").textContent=profile.role||"Staff";
  const role=(profile.role||"staff").toLowerCase();
  document.getElementById("adminMenu").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
   document.getElementById("adminAccountSettings").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
