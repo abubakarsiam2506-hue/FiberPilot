@@ -104,6 +104,7 @@
 <div id="adminAccountModal" class="modal hidden"><div class="modal-card"><h2>👑 Create Admin ID</h2><p class="muted">The form is ready for your Admin creation backend/Edge Function. Normal browser signup is intentionally not used because it can log the current Admin out.</p><div class="field"><label>Name</label><input id="adminName"></div><div class="field"><label>Username</label><input id="adminUsername"></div><div class="field"><label>Email</label><input id="adminEmail" type="email"></div><div class="field"><label>Password</label><input id="adminPassword" type="password"></div><div id="adminCreateError" class="error hidden"></div><div class="modal-actions"><button class="cancel" onclick="closeAdminAccountModal()">Cancel</button><button class="save" onclick="createAdminId()">Create Admin ID</button></div></div></div>
 <div id="toast" class="toast hidden"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL='https://traojcygtyfsgieqqvel.supabase.co';
 const SUPABASE_KEY='sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT';
