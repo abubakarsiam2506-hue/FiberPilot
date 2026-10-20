@@ -1,420 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>FiberPilot</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Siam Network Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
-button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
-.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#eef3f9}
-.login-card{width:100%;max-width:420px;background:#fff;padding:32px;border-radius:18px;box-shadow:0 10px 35px rgba(0,0,0,.08)}
-.logo{font-size:30px;font-weight:800;margin-bottom:8px}.muted{color:#667085}.field{margin-top:16px}.field label{display:block;font-weight:600;margin-bottom:7px}
-.field input,.field select{width:100%;padding:12px;border:1px solid #d7dce5;border-radius:9px;outline:none}.field input:focus,.field select:focus{border-color:#2563eb}
-.primary,.add-btn{border:0;background:#2563eb;color:#fff;font-weight:700}.primary{width:100%;margin-top:20px;padding:13px;border-radius:9px}.error{margin-top:14px;color:#b42318;background:#fef3f2;padding:10px;border-radius:8px}
-.app{min-height:100vh}.topbar{height:64px;background:#111827;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:20}
-.brand{font-size:22px;font-weight:800;display:flex;gap:10px;align-items:center}.menu-btn{border:0;background:#1f2937;color:#fff;border-radius:8px;padding:8px 11px;font-size:20px}
-.user-area{display:flex;align-items:center;gap:12px}.logout{border:1px solid #475467;background:transparent;color:#fff;padding:8px 13px;border-radius:8px}
-.layout{display:flex;min-height:calc(100vh - 64px)}.sidebar{width:255px;background:#fff;border-right:1px solid #e5e7eb;padding:16px 12px;flex-shrink:0}
-.menu-title{font-size:12px;color:#98a2b3;font-weight:700;padding:8px 12px;text-transform:uppercase}.menu-item{width:100%;display:flex;align-items:center;gap:11px;border:0;background:transparent;padding:12px;border-radius:9px;text-align:left;color:#344054;font-weight:600;margin:2px 0}
-.menu-item:hover,.menu-item.active{background:#eff6ff;color:#1d4ed8}.menu-spacer{height:12px}.danger{color:#b42318!important}.main{flex:1;min-width:0}.container{max-width:1200px;margin:auto;padding:24px}
-.company{margin-bottom:22px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 15px rgba(0,0,0,.05)}.card-title{color:#667085;font-size:14px}.number{margin-top:8px;font-size:30px;font-weight:800}
-.section{margin-top:24px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.add-btn{padding:10px 15px;border-radius:8px}
-.table-wrap{overflow:auto;background:#fff;border-radius:14px;box-shadow:0 3px 15px rgba(0,0,0,.05)}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:13px 15px;text-align:left;border-bottom:1px solid #eaecf0}th{font-size:13px;color:#667085}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}.modal-card{width:100%;max-width:500px;background:#fff;padding:25px;border-radius:15px;max-height:90vh;overflow:auto}
-.modal-actions{display:flex;gap:10px;margin-top:20px}.cancel,.save{flex:1;padding:11px;border-radius:8px}.cancel{border:1px solid #d0d5dd;background:#fff}.save{border:0;background:#2563eb;color:#fff}
-.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#ecfdf3;color:#027a48;font-size:12px;font-weight:700}
-.panel{background:#fff;border-radius:14px;padding:22px;box-shadow:0 3px 15px rgba(0,0,0,.05);margin-top:20px}.panel h2{margin-top:0}.info-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eaecf0}
-.toast{position:fixed;right:18px;bottom:18px;background:#111827;color:#fff;padding:12px 16px;border-radius:10px;z-index:100;box-shadow:0 5px 20px rgba(0,0,0,.2)}
-.overlay{display:none}.overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:25}
-@media(max-width:800px){.sidebar{position:fixed;top:64px;bottom:0;left:0;z-index:30;transform:translateX(-105%);transition:.2s;box-shadow:5px 0 20px rgba(0,0,0,.12)}.sidebar.open{transform:translateX(0)}.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:500px){.grid{grid-template-columns:1fr}.container{padding:15px}.topbar{padding:0 10px}.user-area #userName{display:none}.logout{padding:7px 9px}}
-
-.settings-actions{margin-top:16px}
-.settings-btn{display:block;width:100%;text-align:left;border:1px solid #e5e7eb;background:#fff;padding:13px 14px;border-radius:10px;margin-top:10px;font-weight:700;cursor:pointer}
-.settings-btn:hover{background:#f8fafc}
-.dashboard-metrics{grid-template-columns:repeat(4,1fr)}
-.quick-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
-.quick-btn{border:0;border-radius:10px;padding:11px 16px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
-.modal-card{max-height:90vh;overflow:auto}
-@media(max-width:1100px){.dashboard-metrics{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:800px){.dashboard-metrics{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:500px){.dashboard-metrics{grid-template-columns:1fr}}
-
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}\n</style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#eef3f9;color:#182235}button,input,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}
+:root{--nav:#10182b;--green:#16843e;--soft:#e8edf5;--text:#182235;--muted:#6b778a;--card:#fff}
+#loginPage{min-height:100vh;display:grid;place-items:center;padding:20px;background:#eef3f9}.login-card{width:min(420px,100%);background:#fff;border-radius:24px;padding:28px;box-shadow:0 15px 45px #14213d18}.login-logo{font-size:30px;font-weight:800;margin-bottom:8px}.muted{color:var(--muted)}.field{margin:14px 0}.field label{display:block;font-weight:700;margin-bottom:7px}.field input,.field select{width:100%;border:1px solid #d9e0ea;border-radius:12px;padding:13px;outline:0;background:#fff}.field input:focus,.field select:focus{border-color:#16843e}.primary{width:100%;padding:14px;border-radius:13px;background:var(--nav);color:#fff;font-weight:800}.error{margin-top:12px;padding:11px;border-radius:10px;background:#fff0f0;color:#b42318}
+#app{min-height:100vh}.topbar{height:78px;background:var(--nav);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:1000}.brand{display:flex;align-items:center;gap:15px;font-size:27px;font-weight:500}.menu-btn,.loc-btn{width:58px;height:58px;border-radius:16px;background:#1c2942;color:#fff;font-size:31px;display:grid;place-items:center}.menu-btn{line-height:1}.top-right{display:flex;align-items:center;gap:10px}.top-user{font-size:13px;opacity:.9}.layout{display:flex;min-height:calc(100vh - 78px)}.sidebar{width:265px;background:#fff;border-right:1px solid #e3e8ef;padding:16px 12px;position:fixed;left:0;top:78px;bottom:0;z-index:1100;overflow:auto;transform:translateX(-110%);transition:.2s}.sidebar.open{transform:translateX(0)}.side-item{width:100%;background:#fff;color:#334155;text-align:left;padding:13px 14px;border-radius:12px;margin:3px 0;font-weight:700}.side-item.active,.side-item:hover{background:#edf8f1;color:#137b3a}.side-sep{height:12px}.overlay{position:fixed;inset:0;background:#0006;z-index:1050}.main{width:100%;padding:18px}.content{max-width:1250px;margin:auto}.status{font-size:16px;color:#27844a;margin:0 0 16px 2px;font-weight:600}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.metric{background:#fff;border-radius:22px;padding:22px;box-shadow:0 5px 22px #17243a0d;min-height:130px}.metric .value{font-size:37px;line-height:1;font-weight:400;margin-bottom:12px}.metric .label{font-size:20px;color:#667386}.actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:17px 0}.action{min-height:78px;border-radius:18px;padding:18px;font-size:21px;font-weight:500;text-align:center}.add{background:var(--green);color:#fff}.draw{background:var(--nav);color:#fff}.refresh{background:#e2e8f1;color:#182235;grid-column:2}
+.map-card{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 5px 22px #17243a0d;margin-top:2px}.map-head{padding:14px 17px;display:flex;justify-content:space-between;align-items:center}.map-head h2{margin:0;font-size:19px}.map-tools{display:flex;gap:8px}.small-btn{background:#edf1f6;color:#1e293b;border-radius:10px;padding:9px 11px;font-weight:700}.small-btn.green{background:#e7f7ed;color:#137b3a}.map{height:520px}.list-card,.panel{background:#fff;border-radius:20px;padding:18px;margin-top:16px;box-shadow:0 5px 22px #17243a0d}.list-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.list-head h2{margin:0}.search{width:180px;padding:10px 12px;border:1px solid #d8e0ea;border-radius:10px}.table-wrap{overflow:auto;margin-top:12px}table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:12px;border-bottom:1px solid #edf0f4;text-align:left}th{font-size:13px;color:#64748b}.badge{padding:5px 8px;border-radius:20px;background:#e8f7ee;color:#137b3a;font-size:12px;font-weight:700}
+.modal{position:fixed;inset:0;background:#0007;z-index:2000;display:grid;place-items:center;padding:18px}.modal-card{width:min(520px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;padding:22px}.modal-card h2{margin-top:0}.modal-actions{display:flex;gap:10px;margin-top:18px}.cancel,.save{flex:1;padding:12px;border-radius:11px}.cancel{background:#e9edf3}.save{background:var(--green);color:#fff;font-weight:800}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:3000;background:var(--nav);color:#fff;padding:12px 16px;border-radius:12px;box-shadow:0 8px 30px #0004;max-width:90%;text-align:center}
+.info-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #edf0f4}.settings-btn{width:100%;text-align:left;padding:14px;background:#f5f7fa;border-radius:11px;margin-top:9px;font-weight:700}.danger-btn{background:#fff0f0;color:#b42318}.empty{padding:25px;text-align:center;color:#778296}
+@media(min-width:1050px){.sidebar{transform:none}.main{margin-left:265px}.menu-btn{display:none}.overlay{display:none!important}.actions{grid-template-columns:1fr 1fr 1fr}.refresh{grid-column:auto}}
+@media(max-width:650px){.topbar{height:76px;padding:0 10px}.brand{font-size:23px;gap:9px}.menu-btn,.loc-btn{width:52px;height:52px;border-radius:15px}.top-user{display:none}.main{padding:10px}.metrics{grid-template-columns:repeat(3,1fr);gap:10px}.metric{min-height:112px;padding:15px;border-radius:19px}.metric .value{font-size:31px}.metric .label{font-size:16px}.actions{gap:10px}.action{min-height:72px;font-size:18px}.map{height:430px}.list-head{align-items:flex-start;flex-direction:column}.search{width:100%}}
+@media(max-width:410px){.metrics{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr 1fr}.refresh{grid-column:2}.brand{font-size:20px}}
+</style>
 </head>
 <body>
-
-<div id="loginPage" class="login-page">
-<div class="login-card">
-<div class="logo">FiberPilot</div><div class="muted">Fiber Network Management</div>
-<div class="field"><label>Email</label><input id="email" type="email" placeholder="admin@example.com"></div>
-<div class="field"><label>Password</label><input id="password" type="password" placeholder="Password"></div>
-<button id="loginButton" type="button" class="primary">Login</button><div id="loginError" class="error hidden"></div>
-</div></div>
-
-<div id="app" class="app hidden">
-<div class="topbar">
-<div class="brand"><button class="menu-btn" onclick="toggleMenu()">☰</button><span>FiberPilot</span></div>
-<div class="user-area"><span id="userName"></span><button class="logout" onclick="logout()">Logout</button></div>
-</div>
-<div id="overlay" class="overlay" onclick="closeMenu()"></div>
-<div class="layout">
-<aside id="sidebar" class="sidebar">
-<div class="menu-title">Menu</div>
-<button class="menu-item active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
-<button class="menu-item" onclick="openPointModal();closeMenu()">📍 Add Point</button>
-<button class="menu-item" onclick="openLineModal();closeMenu()">〰 Draw Fiber Line</button>
-<button class="menu-item" onclick="myLocation()">📌 My Location</button>
-<button class="menu-item" onclick="refreshData()">↻ Refresh</button>
-<button class="menu-item" onclick="showPage('points',this)">📋 Point List</button>
-<button class="menu-item" onclick="showPage('lines',this)">〰 Fiber Line List</button>
-<button class="menu-item" onclick="showPage('settings',this)">⚙️ Settings</button>
-<div class="menu-spacer"></div>
-<div class="menu-title">Management</div>
-<button id="staffMenu" class="menu-item" onclick="showPage('staff',this)">👷 Staff Panel</button>
-<button id="adminMenu" class="menu-item" onclick="showPage('admin',this)">👑 Admin Panel</button>
-<div class="menu-spacer"></div>
-<button class="menu-item danger" onclick="logout()">🚪 Logout</button>
-</aside>
-
-<main class="main"><div class="container">
-<div id="dashboardPage">
-  <div class="company">
-    <h1 id="companyName">Dashboard</h1>
-    <div class="muted">Logged in as <strong id="roleName"></strong><span id="dashboardRole" class="sr-only">Staff</span></div>
-  </div>
-
-  <div class="grid dashboard-metrics">
-    <div class="card"><div class="card-title">Total Points</div><div id="metricTotal" class="number">0</div><span id="pointCount" class="sr-only">0</span></div>
-    <div class="card"><div class="card-title">Fiber Drop</div><div id="metricDrop" class="number">0</div></div>
-    <div class="card"><div class="card-title">Fiber Box</div><div id="metricBox" class="number">0</div><span id="boxCount" class="sr-only">0</span></div>
-    <div class="card"><div class="card-title">Splitter</div><div id="metricSplitter" class="number">0</div></div>
-    <div class="card"><div class="card-title">Main Splitter</div><div id="metricMainSplitter" class="number">0</div></div>
-    <div class="card"><div class="card-title">Sub Splitter</div><div id="metricSubSplitter" class="number">0</div></div>
-    <div class="card"><div class="card-title">Main PON</div><div id="metricMainPon" class="number">0</div></div>
-    <div class="card"><div class="card-title">OLT</div><div id="metricOlt" class="number">0</div></div>
-    <div class="card"><div class="card-title">Problem</div><div id="metricProblem" class="number">0</div></div>
-    <div class="card"><div class="card-title">Other</div><div id="metricOther" class="number">0</div></div>
-    <div class="card"><div class="card-title">Fiber KM</div><div id="metricKm" class="number">0.00</div><span id="lineCount" class="sr-only">0</span></div>
-  </div>
-
-  <div class="quick-actions">
-    <button class="quick-btn" onclick="openPointModal()">＋ Add Point</button>
-    <button class="quick-btn" onclick="openLineModal()">〰 Draw Fiber</button>
-    <button class="quick-btn" onclick="refreshData()">↻ Refresh</button>
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">Siam Network Map</div>
+    <div class="muted">Network management dashboard</div>
+    <div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="username"></div>
+    <div class="field"><label>Password</label><input id="loginPassword" type="password" autocomplete="current-password"></div>
+    <button class="primary" id="loginButton">Login</button>
+    <div id="loginError" class="error hidden"></div>
   </div>
 </div>
 
-<div id="pointsPage" class="hidden"><div class="section-head"><h2>Point List</h2><button class="add-btn" onclick="openPointModal()">+ Add Point</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Fiber Code</th><th>Cores</th><th>Status</th></tr></thead><tbody id="pointsTable"></tbody></table></div></div>
+<div id="app" class="hidden">
+  <header class="topbar">
+    <div class="brand"><button class="menu-btn" onclick="toggleMenu()">☰</button><span>Siam Network Map</span></div>
+    <div class="top-right"><span id="topUser" class="top-user"></span><button class="loc-btn" onclick="myLocation()">⌾</button></div>
+  </header>
+  <div id="overlay" class="overlay hidden" onclick="closeMenu()"></div>
+  <aside id="sidebar" class="sidebar">
+    <button class="side-item active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
+    <button class="side-item" onclick="openPointModal()">📍 Add Point</button>
+    <button class="side-item" onclick="openLineModal()">〰 Draw Fiber</button>
+    <button class="side-item" onclick="myLocation()">📌 My Location</button>
+    <button class="side-item" onclick="refreshData()">↻ Refresh</button>
+    <button class="side-item" onclick="showPage('points',this)">📋 Point List</button>
+    <button class="side-item" onclick="showPage('lines',this)">〰 Fiber Line List</button>
+    <button class="side-item" onclick="showPage('settings',this)">⚙️ Settings</button>
+    <div class="side-sep"></div>
+    <button id="staffMenu" class="side-item" onclick="showPage('staff',this)">👷 Staff Panel</button>
+    <button id="adminMenu" class="side-item hidden" onclick="showPage('admin',this)">👑 Admin Panel</button>
+    <button class="side-item" onclick="logout()">🚪 Logout</button>
+  </aside>
 
-<div id="linesPage" class="hidden"><div class="section-head"><h2>Fiber Line List</h2><button class="add-btn" onclick="openLineModal()">+ Draw Fiber Line</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Fiber Code</th><th>Cores</th><th>Length</th><th>Status</th></tr></thead><tbody id="linesTable"></tbody></table></div></div>
+  <main class="main"><div class="content">
+    <div id="dashboardPage">
+      <div id="loadStatus" class="status">Data loading...</div>
+      <section class="metrics">
+        <div class="metric"><div id="metricTotal" class="value">0</div><div class="label">Total Points</div></div>
+        <div class="metric"><div id="metricDrop" class="value">0</div><div class="label">Fiber Drop</div></div>
+        <div class="metric"><div id="metricBox" class="value">0</div><div class="label">Fiber Box</div></div>
+        <div class="metric"><div id="metricSplitter" class="value">0</div><div class="label">Splitter</div></div>
+        <div class="metric"><div id="metricMainSplitter" class="value">0</div><div class="label">Main Splitter</div></div>
+        <div class="metric"><div id="metricSubSplitter" class="value">0</div><div class="label">Sub Splitter</div></div>
+        <div class="metric"><div id="metricMainPon" class="value">0</div><div class="label">Main PON</div></div>
+        <div class="metric"><div id="metricOlt" class="value">0</div><div class="label">OLT</div></div>
+        <div class="metric"><div id="metricProblem" class="value">0</div><div class="label">Problem</div></div>
+        <div class="metric"><div id="metricOther" class="value">0</div><div class="label">Other</div></div>
+        <div class="metric"><div id="metricKm" class="value">0.00</div><div class="label">Fiber KM</div></div>
+      </section>
+      <section class="actions">
+        <button class="action add" onclick="openPointModal()">＋ Add Point</button>
+        <button class="action draw" onclick="openLineModal()">〰 Draw Fiber</button>
+        <button class="action refresh" onclick="refreshData()">↻ Refresh</button>
+      </section>
+      <section class="map-card">
+        <div class="map-head"><h2>Network Map</h2><div class="map-tools"><button class="small-btn green" onclick="centerMap()">⌖ Center</button><button class="small-btn" onclick="fitPoints()">Fit Points</button></div></div>
+        <div id="map" class="map"></div>
+      </section>
+      <section class="list-card">
+        <div class="list-head"><h2>📋 Point List</h2><input id="pointSearch" class="search" placeholder="Search point..." oninput="renderPointList()"></div>
+        <div class="table-wrap"><table><thead><tr><th>Point</th><th>Type</th><th>Code</th><th>Cores</th><th>Status</th></tr></thead><tbody id="pointListBody"></tbody></table></div>
+      </section>
+    </div>
 
-<div id="settingsPage" class="hidden">
-  <div class="panel">
-    <h2>⚙️ Settings</h2>
-    <div class="info-row"><span>Company</span><strong id="settingsCompany">-</strong></div>
-    <div class="info-row"><span>Username</span><strong id="settingsUsername">-</strong></div>
-    <div class="info-row"><span>Role</span><strong id="settingsRole">-</strong></div>
-    <div class="info-row"><span>Email</span><strong id="settingsEmail">-</strong></div>
-  </div>
+    <div id="pointsPage" class="hidden list-card"><div class="list-head"><h2>📋 Point List</h2><button class="small-btn green" onclick="openPointModal()">＋ Add Point</button></div><div class="table-wrap"><table><thead><tr><th>Point</th><th>Type</th><th>Code</th><th>Cores</th><th>Status</th></tr></thead><tbody id="pointsPageBody"></tbody></table></div></div>
+    <div id="linesPage" class="hidden list-card"><div class="list-head"><h2>〰 Fiber Line List</h2><button class="small-btn green" onclick="openLineModal()">＋ Draw Fiber</button></div><div class="table-wrap"><table><thead><tr><th>Line</th><th>Code</th><th>Cores</th><th>Length</th><th>Status</th></tr></thead><tbody id="linesPageBody"></tbody></table></div></div>
 
-  <div id="accountSettings" class="panel settings-actions">
-    <h3>🔐 Account Settings</h3>
-    <button class="settings-btn" onclick="openUsernameModal()">✏️ Change Username</button>
-    <button class="settings-btn" onclick="openPasswordModal()">🔒 Change Password</button>
-  </div>
-
-  <div id="adminAccountSettings" class="panel settings-actions hidden">
-    <h3>👥 Account Management</h3>
-    <p class="muted">Main Admin can create Staff and Sub Admin accounts for this company.</p>
-    <button class="settings-btn" onclick="openCreateAccountModal('staff')">👷 New Staff Account</button>
-    <button class="settings-btn" onclick="openCreateAccountModal('sub_admin')">👤 New Sub Admin Account</button>
-  </div>
+    <div id="settingsPage" class="hidden panel">
+      <h2>⚙️ Settings</h2>
+      <div class="info-row"><span>Company</span><strong id="settingsCompany">-</strong></div><div class="info-row"><span>Username</span><strong id="settingsUsername">-</strong></div><div class="info-row"><span>Role</span><strong id="settingsRole">-</strong></div><div class="info-row"><span>Email</span><strong id="settingsEmail">-</strong></div>
+      <button class="settings-btn" onclick="openUsernameModal()">✏️ Change Username</button><button class="settings-btn" onclick="openPasswordModal()">🔒 Change Password</button>
+      <div id="adminSettings" class="hidden"><hr><h3>👑 Admin Account</h3><p class="muted">Only Main Admin can create the next Admin ID. Staff/Sub Admin cannot use this section.</p><button class="settings-btn" onclick="openAdminAccountModal()">＋ Create Admin ID</button></div>
+    </div>
+    <div id="staffPage" class="hidden panel"><h2>👷 Staff Panel</h2><p class="muted">Staff can add network points and fiber lines and view the point list.</p></div>
+    <div id="adminPage" class="hidden panel"><h2>👑 Admin Panel</h2><div class="info-row"><span>Company</span><strong id="adminCompany">-</strong></div><div class="info-row"><span>Role</span><strong id="adminRole">-</strong></div><p class="muted">Main Admin controls account creation and network data.</p></div>
+  </div></main>
 </div>
 
-<div id="staffPage" class="hidden"><div class="panel"><h2>👷 Staff Panel</h2><p class="muted">Staff workspace. Use Point and Fiber Line tools from the menu to manage network data.</p></div></div>
-
-<div id="adminPage" class="hidden"><div class="panel"><h2>👑 Admin Panel</h2><p class="muted">Administrator workspace for company network management.</p><div class="info-row"><span>Company</span><strong id="adminCompany">-</strong></div><div class="info-row"><span>Your Role</span><strong id="adminRole">-</strong></div></div></div>
-</div></main></div></div>
-
-<div id="pointModal" class="modal hidden"><div class="modal-card"><h2>Add Fiber Point</h2>
-<div class="field"><label>Name</label><input id="pointName" placeholder="Example: Box 01"></div>
-<div class="field"><label>Type</label><select id="pointType"><option>Fiber Box</option><option>OLT</option><option>POP</option><option>Joint</option><option>Other</option></select></div>
-<div class="field"><label>Fiber Code</label><input id="pointCode" placeholder="FB-001"></div>
-<div class="field"><label>Total Cores</label><input id="pointCores" type="number" min="0" value="0"></div>
-<div class="modal-actions"><button class="cancel" onclick="closePointModal()">Cancel</button><button class="save" onclick="savePoint()">Save</button></div></div></div>
-
-<div id="lineModal" class="modal hidden"><div class="modal-card"><h2>Draw Fiber Line</h2>
-<div class="field"><label>Name</label><input id="lineName" placeholder="Example: Main Line 01"></div>
-<div class="field"><label>Fiber Code</label><input id="lineCode" placeholder="FL-001"></div>
-<div class="field"><label>Total Cores</label><input id="lineCores" type="number" min="0" value="0"></div>
-<div class="field"><label>Length (meters)</label><input id="lineLength" type="number" min="0" value="0"></div>
-<div class="modal-actions"><button class="cancel" onclick="closeLineModal()">Cancel</button><button class="save" onclick="saveLine()">Save</button></div></div></div>
-
-
-<div id="usernameModal" class="modal hidden">
-  <div class="modal-card">
-    <h2>✏️ Change Username</h2>
-    <div class="field"><label>New Username</label><input id="newUsername" type="text" placeholder="New username"></div>
-    <div class="modal-actions"><button onclick="closeUsernameModal()">Cancel</button><button class="save" onclick="changeUsername()">Save</button></div>
-  </div>
-</div>
-
-<div id="passwordModal" class="modal hidden">
-  <div class="modal-card">
-    <h2>🔒 Change Password</h2>
-    <div class="field"><label>New Password</label><input id="newPassword" type="password" placeholder="New password"></div>
-    <div class="field"><label>Confirm Password</label><input id="confirmPassword" type="password" placeholder="Confirm password"></div>
-    <div class="modal-actions"><button onclick="closePasswordModal()">Cancel</button><button class="save" onclick="changePassword()">Save</button></div>
-  </div>
-</div>
-
-<div id="createAccountModal" class="modal hidden">
-  <div class="modal-card">
-    <h2 id="createAccountTitle">👷 New Account</h2>
-    <div class="field"><label>Full Name</label><input id="newAccountName" type="text" placeholder="Full name"></div>
-    <div class="field"><label>Username</label><input id="newAccountUsername" type="text" placeholder="Username"></div>
-    <div class="field"><label>Email</label><input id="newAccountEmail" type="email" placeholder="Email"></div>
-    <div class="field"><label>Password</label><input id="newAccountPassword" type="password" placeholder="Password"></div>
-    <div class="field"><label>Confirm Password</label><input id="newAccountPassword2" type="password" placeholder="Confirm password"></div>
-    <div id="createAccountError" class="error hidden"></div>
-    <div class="modal-actions"><button onclick="closeCreateAccountModal()">Cancel</button><button class="save" onclick="createAccount()">Create Account</button></div>
-  </div>
-</div>
-
+<div id="pointModal" class="modal hidden"><div class="modal-card"><h2>📍 Add Point</h2><p class="muted">Set the point on the map. It will be saved and will appear again after refresh/login.</p><div class="field"><label>Name</label><input id="pointName" placeholder="Example: Box 01"></div><div class="field"><label>Type</label><select id="pointType"><option value="Fiber Drop">Fiber Drop</option><option value="Fiber Box">Fiber Box</option><option value="Splitter">Splitter</option><option value="Main Splitter">Main Splitter</option><option value="Sub Splitter">Sub Splitter</option><option value="Main PON">Main PON</option><option value="OLT">OLT</option><option value="Problem">Problem</option><option value="Other">Other</option></select></div><div class="field"><label>Fiber Code</label><input id="pointCode" placeholder="FB-001"></div><div class="field"><label>Total Cores</label><input id="pointCores" type="number" min="0" value="0"></div><div class="field"><label>Latitude</label><input id="pointLat" type="number" step="any" placeholder="Map location"></div><div class="field"><label>Longitude</label><input id="pointLng" type="number" step="any" placeholder="Map location"></div><div class="modal-actions"><button class="cancel" onclick="closePointModal()">Cancel</button><button class="save" onclick="savePoint()">Save Point</button></div></div></div>
+<div id="lineModal" class="modal hidden"><div class="modal-card"><h2>〰 Draw Fiber</h2><p class="muted">This saves the fiber line information. Map drawing can be added without changing your existing database.</p><div class="field"><label>Name</label><input id="lineName" placeholder="Main Line 01"></div><div class="field"><label>Fiber Code</label><input id="lineCode" placeholder="FL-001"></div><div class="field"><label>Total Cores</label><input id="lineCores" type="number" min="0" value="0"></div><div class="field"><label>Length (meters)</label><input id="lineLength" type="number" min="0" value="0"></div><div class="modal-actions"><button class="cancel" onclick="closeLineModal()">Cancel</button><button class="save" onclick="saveLine()">Save Fiber</button></div></div></div>
+<div id="usernameModal" class="modal hidden"><div class="modal-card"><h2>✏️ Change Username</h2><div class="field"><label>New Username</label><input id="newUsername"></div><div class="modal-actions"><button class="cancel" onclick="closeUsernameModal()">Cancel</button><button class="save" onclick="changeUsername()">Save</button></div></div></div>
+<div id="passwordModal" class="modal hidden"><div class="modal-card"><h2>🔒 Change Password</h2><div class="field"><label>New Password</label><input id="newPassword" type="password"></div><div class="field"><label>Confirm Password</label><input id="confirmPassword" type="password"></div><div class="modal-actions"><button class="cancel" onclick="closePasswordModal()">Cancel</button><button class="save" onclick="changePassword()">Save</button></div></div></div>
+<div id="adminAccountModal" class="modal hidden"><div class="modal-card"><h2>👑 Create Admin ID</h2><p class="muted">The form is ready for your Admin creation backend/Edge Function. Normal browser signup is intentionally not used because it can log the current Admin out.</p><div class="field"><label>Name</label><input id="adminName"></div><div class="field"><label>Username</label><input id="adminUsername"></div><div class="field"><label>Email</label><input id="adminEmail" type="email"></div><div class="field"><label>Password</label><input id="adminPassword" type="password"></div><div id="adminCreateError" class="error hidden"></div><div class="modal-actions"><button class="cancel" onclick="closeAdminAccountModal()">Cancel</button><button class="save" onclick="createAdminId()">Create Admin ID</button></div></div></div>
 <div id="toast" class="toast hidden"></div>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const SUPABASE_URL="https://traojcygtyfsgieqqvel.supabase.co";
-const SUPABASE_KEY="sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT";
+const SUPABASE_URL='https://traojcygtyfsgieqqvel.supabase.co';
+const SUPABASE_KEY='sb_publishable_mVJt4eQbd_noOUjtXinLYA_JWSAM1rT';
 const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentUser=null,currentProfile=null,currentCompany=null,pointsCache=[],linesCache=[];
+let currentUser=null,currentProfile=null,currentCompany=null,pointsCache=[],linesCache=[],map=null,markers=[];
+const $=id=>document.getElementById(id); const setText=(id,v)=>{const e=$(id);if(e)e.textContent=String(v??'')}; const show=(id,on)=>{const e=$(id);if(e)e.classList.toggle('hidden',!on)};
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function toast(msg){const e=$('toast');if(!e)return;e.textContent=msg;e.classList.remove('hidden');clearTimeout(window.__toast);window.__toast=setTimeout(()=>e.classList.add('hidden'),3000)}
+function role(){return String(currentProfile?.role||'staff').toLowerCase()} function mainAdmin(){return ['admin','owner','super_admin'].includes(role())}
+function showLoginError(msg){const e=$('loginError');e.textContent=msg;e.classList.remove('hidden')}
+function clearLoginError(){show('loginError',false)}
 
-// Safe DOM helpers: missing optional elements must never break login or dashboard loading.
-function setText(id,value){
-  const el=document.getElementById(id);
-  if(el) el.textContent=String(value ?? "");
-}
-function setHidden(id,hidden){
-  const el=document.getElementById(id);
-  if(el) el.classList.toggle("hidden",!!hidden);
-}
-
-document.addEventListener("DOMContentLoaded",async()=>{
-  const btn=document.getElementById("loginButton");
-  if(btn) btn.addEventListener("click",login);
-  try{
-    if(!window.supabase){throw new Error("Supabase library did not load. Please refresh the page or check your internet connection.");}
-    const {data:{session},error}=await client.auth.getSession();
-    if(error){console.error(error);showLogin();return}
-    if(!session?.user){showLogin();return}
-    await loadUser(session.user);
-  }catch(e){console.error(e);showLogin();showLoginError(e);}
-});
-client.auth.onAuthStateChange((event)=>{if(event==="SIGNED_OUT")showLogin()});
-
-async function login(){
- const btn=document.getElementById("loginButton"),email=document.getElementById("email").value.trim(),password=document.getElementById("password").value,errorBox=document.getElementById("loginError");
- errorBox.classList.add("hidden");errorBox.textContent="";
- if(!email||!password){showLoginError(new Error("Email and password are required."));return}
- if(!window.supabase){showLoginError(new Error("Supabase library did not load. Refresh the page and try again."));return}
- if(btn){btn.disabled=true;btn.textContent="Logging in...";}
- try{
-   const {data,error}=await client.auth.signInWithPassword({email,password});
-   if(error) throw error;
-   if(!data?.user) throw new Error("Login succeeded but no user session was returned.");
-   await loadUser(data.user);
- }catch(e){
-   console.error("LOGIN ERROR",e);
-   showLoginError(e);
- }finally{
-   if(btn){btn.disabled=false;btn.textContent="Login";}
- }
-}
-function showLoginError(e){
- const box=document.getElementById("loginError");
- if(!box)return;
- box.textContent=e?.message||String(e)||"Login failed. Please try again.";
- box.classList.remove("hidden");
-}
-async function loadUser(user){
- currentUser=user;
- const {data:profile,error:pe}=await client.from("profiles").select("id,full_name,username,role,company_id").eq("id",user.id).maybeSingle();
- if(pe){alert("Profile error:\n\n"+pe.message);return} if(!profile){alert("No profile was found for this account.");return}
- currentProfile=profile;currentCompany=null;
- if(profile.company_id){const {data:company,error:ce}=await client.from("companies").select("id,name,code").eq("id",profile.company_id).maybeSingle();if(ce){alert("Company error:\n\n"+ce.message);return}currentCompany=company}
- const displayName=profile.full_name||profile.username||user.email;
- setText("userName",displayName);
- setText("roleName",profile.role||"Staff");
- setText("dashboardRole",(profile.role||"Staff").toUpperCase());
- setText("companyName",currentCompany?.name||"No Company");
- setText("settingsCompany",currentCompany?.name||"No Company");
- setText("settingsUsername",profile.username||"-");
- setText("settingsRole",profile.role||"Staff");
- setText("settingsEmail",user.email||"-");
- const role=(profile.role||"staff").toLowerCase();
- document.getElementById("adminMenu").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
-  document.getElementById("adminAccountSettings").classList.toggle("hidden",!["admin","owner","super_admin"].includes(role));
- document.getElementById("staffMenu").classList.toggle("hidden",role==="admin"||role==="owner"||role==="super_admin");
- document.getElementById("loginPage").classList.add("hidden");document.getElementById("app").classList.remove("hidden");
- await loadDashboard();
-}
-async function loadDashboard(){
- if(!currentProfile?.company_id){alert("Your account is not assigned to a company.");return}
- const cid=currentProfile.company_id;
- const p=await client.from("fiber_points").select("*").eq("company_id",cid).order("created_at",{ascending:false});
- const b=await client.from("fiber_boxes").select("id").eq("company_id",cid);
- const l=await client.from("fiber_lines").select("*").eq("company_id",cid).order("created_at",{ascending:false});
- if(p.error)console.error("Fiber points:",p.error);if(b.error)console.error("Fiber boxes:",b.error);if(l.error)console.error("Fiber lines:",l.error);
- pointsCache=p.data||[];linesCache=l.data||[];
-  updateDashboardMetrics(pointsCache,b.data||[],linesCache);
- setText("pointCount",pointsCache.length);
- setText("boxCount",(b.data||[]).length);
- setText("lineCount",linesCache.length);
- renderPoints(pointsCache);renderLines(linesCache);
-}
-function renderPoints(points){
- const t=document.getElementById("pointsTable");if(!points.length){t.innerHTML='<tr><td colspan="5" class="muted">No fiber points yet.</td></tr>';return}
- t.innerHTML=points.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.point_type||"Fiber Box")}</td><td>${esc(x.fiber_code||"-")}</td><td>${x.used_cores||0}/${x.total_cores||0}</td><td><span class="badge">${esc(x.status||"active")}</span></td></tr>`).join("");
-}
-function renderLines(lines){
- const t=document.getElementById("linesTable");if(!lines.length){t.innerHTML='<tr><td colspan="5" class="muted">No fiber lines yet.</td></tr>';return}
- t.innerHTML=lines.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.fiber_code||"-")}</td><td>${x.used_cores||0}/${x.total_cores||0}</td><td>${x.length_meters||0} m</td><td><span class="badge">${esc(x.status||"active")}</span></td></tr>`).join("");
-}
-function openPointModal(){document.getElementById("pointModal").classList.remove("hidden")}
-function closePointModal(){document.getElementById("pointModal").classList.add("hidden")}
-function openLineModal(){document.getElementById("lineModal").classList.remove("hidden")}
-function closeLineModal(){document.getElementById("lineModal").classList.add("hidden")}
-
-function roleIsMainAdmin(){
-  const role=(currentProfile?.role||"").toLowerCase();
-  return ["admin","owner","super_admin"].includes(role);
-}
-
-function setMetric(id,value){
-  const el=document.getElementById(id);
-  if(el) el.textContent=value;
-}
-
-function updateDashboardMetrics(points,boxes,lines){
-  const list=Array.isArray(points)?points:[];
-  const norm=v=>String(v||"").trim().toLowerCase();
-  const countType=(...types)=>list.filter(x=>types.includes(norm(x.point_type))).length;
-
-  setMetric("metricTotal",list.length);
-  setMetric("metricDrop",countType("fiber drop","drop","fiber_drop"));
-  setMetric("metricBox",(boxes||[]).length);
-  setMetric("metricSplitter",countType("splitter"));
-  setMetric("metricMainSplitter",countType("main splitter","main_splitter"));
-  setMetric("metricSubSplitter",countType("sub splitter","sub_splitter"));
-  setMetric("metricMainPon",countType("main pon","main_pon","pon"));
-  setMetric("metricOlt",countType("olt"));
-  setMetric("metricProblem",countType("problem","problem point","fault"));
-  setMetric("metricOther",countType("other"));
-
-  const meters=(lines||[]).reduce((sum,x)=>sum+Number(x.length_meters||0),0);
-  setMetric("metricKm",(meters/1000).toFixed(2));
-}
-
-function openUsernameModal(){document.getElementById("newUsername").value=currentProfile?.username||"";document.getElementById("usernameModal").classList.remove("hidden")}
-function closeUsernameModal(){document.getElementById("usernameModal").classList.add("hidden")}
-function openPasswordModal(){document.getElementById("newPassword").value="";document.getElementById("confirmPassword").value="";document.getElementById("passwordModal").classList.remove("hidden")}
-function closePasswordModal(){document.getElementById("passwordModal").classList.add("hidden")}
-
-async function changeUsername(){
-  if(!currentUser||!currentProfile)return;
-  const username=document.getElementById("newUsername").value.trim();
-  if(username.length<3){toast("Username must be at least 3 characters");return}
-  const {error}=await client.from("profiles").update({username}).eq("id",currentUser.id);
-  if(error){toast(error.message);return}
-  currentProfile.username=username;
-  setText("settingsUsername",username);
-  toast("Username changed successfully");
-  closeUsernameModal();
-}
-
-async function changePassword(){
-  const p=document.getElementById("newPassword").value;
-  const p2=document.getElementById("confirmPassword").value;
-  if(p.length<6){toast("Password must be at least 6 characters");return}
-  if(p!==p2){toast("Passwords do not match");return}
-  const {error}=await client.auth.updateUser({password:p});
-  if(error){toast(error.message);return}
-  toast("Password changed successfully");
-  closePasswordModal();
-}
-
-let creatingRole="staff";
-function openCreateAccountModal(role){
-  if(!roleIsMainAdmin()){toast("Only Main Admin can create accounts");return}
-  creatingRole=role;
-  setText("createAccountTitle",role==="sub_admin"?"👤 New Sub Admin Account":"👷 New Staff Account");
-  ["newAccountName","newAccountUsername","newAccountEmail","newAccountPassword","newAccountPassword2"].forEach(id=>document.getElementById(id).value="");
-  document.getElementById("createAccountError").classList.add("hidden");
-  document.getElementById("createAccountModal").classList.remove("hidden");
-}
-function closeCreateAccountModal(){document.getElementById("createAccountModal").classList.add("hidden")}
-
-async function createAccount(){
-  if(!roleIsMainAdmin()){toast("Only Main Admin can create accounts");return}
-  const name=document.getElementById("newAccountName").value.trim();
-  const username=document.getElementById("newAccountUsername").value.trim();
-  const email=document.getElementById("newAccountEmail").value.trim();
-  const password=document.getElementById("newAccountPassword").value;
-  const password2=document.getElementById("newAccountPassword2").value;
-  const err=document.getElementById("createAccountError");
-  err.classList.add("hidden");
-
-  if(!name||!username||!email||!password){err.textContent="All fields are required.";err.classList.remove("hidden");return}
-  if(password.length<6){err.textContent="Password must be at least 6 characters.";err.classList.remove("hidden");return}
-  if(password!==password2){err.textContent="Passwords do not match.";err.classList.remove("hidden");return}
-
-  /*
-   * IMPORTANT:
-   * Supabase Auth user creation must be done by a trusted backend/Edge Function
-   * if the current admin must remain logged in. The browser cannot safely create
-   * another Auth user with the normal signUp flow without changing sessions.
-   */
-  err.textContent="Account creation needs a Supabase Admin/Edge Function. The form is ready, but the Auth account should be created server-side.";
-  err.classList.remove("hidden");
-}
-
-async function savePoint(){
- if(!currentUser||!currentProfile){alert("Please login again.");return}
- const name=document.getElementById("pointName").value.trim(),type=document.getElementById("pointType").value,code=document.getElementById("pointCode").value.trim(),cores=Math.max(0,Number(document.getElementById("pointCores").value||0));
- if(!name){alert("Point name is required.");return}
- const {error}=await client.from("fiber_points").insert({company_id:currentProfile.company_id,name,point_type:type,fiber_code:code||null,total_cores:cores,used_cores:0,status:"active",created_by:currentUser.id});
- if(error){alert(error.message);return}
- document.getElementById("pointName").value="";document.getElementById("pointCode").value="";document.getElementById("pointCores").value="0";closePointModal();toast("Fiber Point added successfully");await loadDashboard();
-}
-async function saveLine(){
- if(!currentUser||!currentProfile){alert("Please login again.");return}
- const name=document.getElementById("lineName").value.trim(),code=document.getElementById("lineCode").value.trim(),cores=Math.max(0,Number(document.getElementById("lineCores").value||0)),length=Math.max(0,Number(document.getElementById("lineLength").value||0));
- if(!name){alert("Line name is required.");return}
- const {error}=await client.from("fiber_lines").insert({company_id:currentProfile.company_id,name,fiber_code:code||null,total_cores:cores,used_cores:0,length_meters:length,status:"active",created_by:currentUser.id});
- if(error){alert(error.message);return}
- document.getElementById("lineName").value="";document.getElementById("lineCode").value="";document.getElementById("lineCores").value="0";document.getElementById("lineLength").value="0";closeLineModal();toast("Fiber Line added successfully");await loadDashboard();
-}
-function showPage(page,btn){
- ["dashboard","points","lines","settings","staff","admin"].forEach(x=>document.getElementById(x+"Page").classList.add("hidden"));
- document.getElementById(page+"Page").classList.remove("hidden");
- document.querySelectorAll(".menu-item").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");closeMenu();
-}
-async function refreshData(){await loadDashboard();toast("Data refreshed");closeMenu()}
-function toggleMenu(){document.getElementById("sidebar").classList.toggle("open");document.getElementById("overlay").classList.toggle("show")}
-function closeMenu(){document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("show")}
-function myLocation(){
- if(!navigator.geolocation){toast("Location is not supported by this browser");return}
- toast("Requesting your location...");
- navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude.toFixed(6),lon=pos.coords.longitude.toFixed(6);toast(`Location: ${lat}, ${lon}`)},err=>toast("Location permission was not allowed"));
- closeMenu();
-}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.add("hidden"),3000)}
-async function logout(){await client.auth.signOut();currentUser=null;currentProfile=null;currentCompany=null;showLogin()}
-function showLogin(){document.getElementById("app").classList.add("hidden");document.getElementById("loginPage").classList.remove("hidden")}
-function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+document.addEventListener('DOMContentLoaded',()=>{ $('loginButton').addEventListener('click',login); $('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')login()}); initMap(); restoreSession(); });
+async function restoreSession(){try{const {data}=await client.auth.getSession();if(data.session) await loadUser(data.session.user)}catch(e){console.error(e)}}
+async function login(){clearLoginError();const email=$('loginEmail').value.trim(),password=$('loginPassword').value;if(!email||!password){showLoginError('Email and password are required.');return}const btn=$('loginButton');btn.disabled=true;btn.textContent='Logging in...';try{const {data,error}=await client.auth.signInWithPassword({email,password});if(error)throw error;await loadUser(data.user)}catch(e){showLoginError(e.message||'Login failed.')}finally{btn.disabled=false;btn.textContent='Login'}}
+async function loadUser(user){currentUser=user;const p=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();if(p.error)throw p.error;if(!p.data)throw new Error('Profile not found for this user.');currentProfile=p.data;if(currentProfile.company_id){const c=await client.from('companies').select('*').eq('id',currentProfile.company_id).maybeSingle();if(c.error)console.warn(c.error);currentCompany=c.data||null}setText('topUser',currentProfile.username||user.email);setText('settingsCompany',currentCompany?.name||'-');setText('settingsUsername',currentProfile.username||'-');setText('settingsRole',currentProfile.role||'Staff');setText('settingsEmail',user.email||'-');setText('adminCompany',currentCompany?.name||'-');setText('adminRole',currentProfile.role||'-');show('adminMenu',mainAdmin());show('adminSettings',mainAdmin());show('staffMenu',!mainAdmin());show('loginPage',false);show('app',true);setTimeout(()=>map?.invalidateSize(),100);await loadDashboard()}
+function initMap(){map=L.map('map',{zoomControl:true}).setView([23.8103,90.4125],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);}
+async function loadDashboard(){if(!currentProfile?.company_id){setText('loadStatus','No company assigned to this account.');return}setText('loadStatus','Data loading...');const cid=currentProfile.company_id;const [p,b,l]=await Promise.all([client.from('fiber_points').select('*').eq('company_id',cid).order('created_at',{ascending:false}),client.from('fiber_boxes').select('id').eq('company_id',cid),client.from('fiber_lines').select('*').eq('company_id',cid).order('created_at',{ascending:false})]);if(p.error){setText('loadStatus','Point data error: '+p.error.message);return}pointsCache=p.data||[];linesCache=l.data||[];updateMetrics(pointsCache,b.data||[],linesCache);renderMarkers();renderPointList();renderPageLists();setText('loadStatus','Data loaded ✅')}
+function countType(points,...types){const a=types.map(x=>x.toLowerCase());return points.filter(p=>a.includes(String(p.point_type||'').trim().toLowerCase())).length}
+function updateMetrics(p,b,l){setText('metricTotal',p.length);setText('metricDrop',countType(p,'fiber drop','drop','fiber_drop'));setText('metricBox',b.length);setText('metricSplitter',countType(p,'splitter'));setText('metricMainSplitter',countType(p,'main splitter','main_splitter'));setText('metricSubSplitter',countType(p,'sub splitter','sub_splitter'));setText('metricMainPon',countType(p,'main pon','main_pon','pon'));setText('metricOlt',countType(p,'olt'));setText('metricProblem',countType(p,'problem','fault'));setText('metricOther',countType(p,'other'));setText('metricKm',(l.reduce((s,x)=>s+Number(x.length_meters||0),0)/1000).toFixed(2))}
+function renderMarkers(){markers.forEach(m=>m.remove());markers=[];pointsCache.forEach(p=>{const lat=Number(p.latitude),lng=Number(p.longitude);if(!Number.isFinite(lat)||!Number.isFinite(lng))return;const m=L.marker([lat,lng]).addTo(map);m.bindPopup('<b>'+esc(p.name||'Point')+'</b><br>'+esc(p.point_type||'Other')+'<br>'+esc(p.fiber_code||'-'));markers.push(m)})}
+function rows(points){return points.map(p=>'<tr><td>'+esc(p.name||'-')+'</td><td>'+esc(p.point_type||'-')+'</td><td>'+esc(p.fiber_code||'-')+'</td><td>'+Number(p.used_cores||0)+'/'+Number(p.total_cores||0)+'</td><td><span class="badge">'+esc(p.status||'active')+'</span></td></tr>').join('')}
+function renderPointList(){const q=String($('pointSearch')?.value||'').toLowerCase();const list=pointsCache.filter(p=>[p.name,p.point_type,p.fiber_code].some(v=>String(v||'').toLowerCase().includes(q)));$('pointListBody').innerHTML=list.length?rows(list):'<tr><td colspan="5" class="empty">No points found. Add a point to start your network map.</td></tr>'}
+function renderPageLists(){const body=$('pointsPageBody');if(body)body.innerHTML=pointsCache.length?rows(pointsCache):'<tr><td colspan="5" class="empty">No points yet.</td></tr>';const lb=$('linesPageBody');if(lb)lb.innerHTML=linesCache.length?linesCache.map(x=>'<tr><td>'+esc(x.name||'-')+'</td><td>'+esc(x.fiber_code||'-')+'</td><td>'+Number(x.used_cores||0)+'/'+Number(x.total_cores||0)+'</td><td>'+Number(x.length_meters||0)+' m</td><td><span class="badge">'+esc(x.status||'active')+'</span></td></tr>').join(''):'<tr><td colspan="5" class="empty">No fiber lines yet.</td></tr>'}
+function showPage(page,btn){['dashboard','points','lines','settings','staff','admin'].forEach(x=>show(x+'Page',x===page));document.querySelectorAll('.side-item').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');closeMenu();if(page==='dashboard')setTimeout(()=>map?.invalidateSize(),100)}
+function toggleMenu(){$('sidebar').classList.toggle('open');$('overlay').classList.toggle('hidden')};function closeMenu(){$('sidebar').classList.remove('open');$('overlay').classList.add('hidden')}
+function openPointModal(){closeMenu();$('pointModal').classList.remove('hidden');if(map){const c=map.getCenter();$('pointLat').value=c.lat.toFixed(6);$('pointLng').value=c.lng.toFixed(6)}} function closePointModal(){$('pointModal').classList.add('hidden')}
+async function savePoint(){if(!currentProfile?.company_id||!currentUser){toast('Please login again.');return}const name=$('pointName').value.trim(),type=$('pointType').value,code=$('pointCode').value.trim(),cores=Math.max(0,Number($('pointCores').value||0)),lat=Number($('pointLat').value),lng=Number($('pointLng').value);if(!name){toast('Point name is required.');return}if(!Number.isFinite(lat)||!Number.isFinite(lng)){toast('Latitude and Longitude are required.');return}const payload={company_id:currentProfile.company_id,name,point_type:type,fiber_code:code||null,total_cores:cores,used_cores:0,status:'active',created_by:currentUser.id,latitude:lat,longitude:lng};const {error}=await client.from('fiber_points').insert(payload);if(error){toast(error.message);return}['pointName','pointCode','pointLat','pointLng'].forEach(id=>$(id).value='');$('pointCores').value='0';closePointModal();toast('Point added and saved ✅');await loadDashboard();map.setView([lat,lng],16)}
+function openLineModal(){closeMenu();$('lineModal').classList.remove('hidden')}function closeLineModal(){$('lineModal').classList.add('hidden')}
+async function saveLine(){if(!currentProfile?.company_id||!currentUser){toast('Please login again.');return}const name=$('lineName').value.trim(),code=$('lineCode').value.trim(),cores=Math.max(0,Number($('lineCores').value||0)),length=Math.max(0,Number($('lineLength').value||0));if(!name){toast('Line name is required.');return}const {error}=await client.from('fiber_lines').insert({company_id:currentProfile.company_id,name,fiber_code:code||null,total_cores:cores,used_cores:0,length_meters:length,status:'active',created_by:currentUser.id});if(error){toast(error.message);return}closeLineModal();toast('Fiber line saved ✅');await loadDashboard()}
+function myLocation(){if(!navigator.geolocation){toast('Location is not supported.');return}navigator.geolocation.getCurrentPosition(p=>{const lat=p.coords.latitude,lng=p.coords.longitude;map.setView([lat,lng],17);L.circleMarker([lat,lng],{radius:8}).addTo(map).bindPopup('My Location').openPopup();$('pointLat').value=lat.toFixed(6);$('pointLng').value=lng.toFixed(6);toast('Your location found. You can use it for Add Point.')},()=>toast('Location permission denied.'))}
+function centerMap(){map.setView([23.8103,90.4125],12)}function fitPoints(){const pts=pointsCache.map(p=>[Number(p.latitude),Number(p.longitude)]).filter(x=>Number.isFinite(x[0])&&Number.isFinite(x[1]));if(!pts.length){centerMap();return}map.fitBounds(pts,{padding:[25,25]})}
+async function refreshData(){await loadDashboard();toast('Data refreshed ↻')}
+function openUsernameModal(){$('newUsername').value=currentProfile?.username||'';$('usernameModal').classList.remove('hidden')}function closeUsernameModal(){$('usernameModal').classList.add('hidden')}
+async function changeUsername(){const username=$('newUsername').value.trim();if(username.length<3){toast('Username must be at least 3 characters.');return}const {error}=await client.from('profiles').update({username}).eq('id',currentUser.id);if(error){toast(error.message);return}currentProfile.username=username;setText('settingsUsername',username);setText('topUser',username);closeUsernameModal();toast('Username changed successfully. Please use the new username where applicable.')}
+function openPasswordModal(){$('newPassword').value='';$('confirmPassword').value='';$('passwordModal').classList.remove('hidden')}function closePasswordModal(){$('passwordModal').classList.add('hidden')}
+async function changePassword(){const p=$('newPassword').value,p2=$('confirmPassword').value;if(p.length<6){toast('Password must be at least 6 characters.');return}if(p!==p2){toast('Passwords do not match.');return}const {error}=await client.auth.updateUser({password:p});if(error){toast(error.message);return}closePasswordModal();toast('Password changed successfully. Please login with the new password next time.')}
+function openAdminAccountModal(){if(!mainAdmin()){toast('Only Main Admin can create an Admin ID.');return}$('adminAccountModal').classList.remove('hidden')}function closeAdminAccountModal(){$('adminAccountModal').classList.add('hidden')}
+function createAdminId(){const e=$('adminCreateError');e.textContent='The Admin Auth account must be created through a Supabase Admin/Edge Function so the current Main Admin session is not replaced. This screen is ready for that backend.';e.classList.remove('hidden')}
+async function logout(){await client.auth.signOut();currentUser=null;currentProfile=null;currentCompany=null;show('app',false);show('loginPage',true);closeMenu()}
 </script>
 </body>
 </html>
